@@ -140,14 +140,14 @@ void loop() {
     // test change mode
     lightManager.nextMode();
   }
+  if ( alertButton.held() ) {
+    lightManager.setColor1({random(255), random(255), random(255)});
+  }
   if ( alertButton.tapped() ) {
     Serial.println("Plat Alert");
 
     int randomAdvert = random(1, NB_MAX_MP3_ADVERT + 1);
     mp3Player.advertise(randomAdvert);
-    
-    // test change color
-    //lightManager.setColor1({random(255), random(255), random(255)});
   }
   if ( volumePot.changed() ) {
     Serial.print("volumePot = ");
