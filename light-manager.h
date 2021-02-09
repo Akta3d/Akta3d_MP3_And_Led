@@ -9,6 +9,8 @@
 #include "light-type-random.h"
 #include "rgb-struct.h"
 
+#define ALERT_DURATION 500
+
 #define MAX_LIGHT_MODES 3 // should be equal to maw enum value, used during choosing a random mode
 
 enum lightMode {
@@ -27,7 +29,7 @@ class LightManager
     void setup(); 
 
     // choose a specific lightType
-    void changeMode(lightMode mode);
+    void changeMode(int mode);
 
     void nextMode();
     
@@ -40,6 +42,8 @@ class LightManager
     void setColor1(RGB color);
     void setColor2(RGB color);
     void setParam(int param);
+
+    void playAlert(RGB color);
     
   private:
     int _pin;
@@ -53,7 +57,9 @@ class LightManager
     LightTypeOff* _lightTypeOff;  
     LightTypeSingle* _lightTypeSingle;  
     LightTypeRandomGradation* _lightTypeRandomGradation;  
-    LightTypeRandom* _lightTypeRandom;  
+    LightTypeRandom* _lightTypeRandom; 
+
+    uint16_t _alertMillis;
 };
 
 #endif

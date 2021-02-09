@@ -6,6 +6,7 @@ LightManager::LightManager(int pin, int nbLed) {
   _nbLed = nbLed;
   _currentMode = OFF;
   _previousMode = OFF;
+  _alertMillis = 0;
 
   _strip = new Adafruit_NeoPixel(_nbLed, _pin, NEO_GRB + NEO_KHZ800);
   _lightTypeOff = new LightTypeOff(_strip);
@@ -21,7 +22,7 @@ void LightManager::setup() {
   _strip->show(); // set all led to off
 }
 
-void LightManager::changeMode(lightMode mode) {
+void LightManager::changeMode(int mode) {
   switch(mode) {
     case SINGLE:
       _currentLightType = _lightTypeSingle;
@@ -66,7 +67,19 @@ void LightManager::chooseRandomMode() {
 }
 
 void LightManager::loop() {
-  _currentLightType->loop();
+  if(_alertMillis == 0) {
+    _currentLightType->loop();
+  } 
+  else if(
+    _alertMillis != 0 &&
+    _alertMillis + ALERT_DURATION < millis()
+  ) {
+      _alertMillis = 0;
+      _strip->clear();
+      _strip->show();
+
+      changeMode(_currentMode);
+  }    
 }
 
 void LightManager::setColor1(RGB color) {
@@ -74,9 +87,13 @@ void LightManager::setColor1(RGB color) {
 }
 
 void LightManager::setColor2(RGB color) {
-  _currentLightType->setColor1(color);  
+  _currentLightType->setColor2(color);  
 }
 
-void LightManager::setParam(int param) {
-  _currentLightType->setParam(param);  
+void LightManager::playAlert(RGB color) {
+  uint32_t stripColor = _strip->Color(color.r, color.g, color.b);
+  _strip->fill(stripColor, 0, _strip->numPixels());
+  _strip->show();
+
+  _alertMillis = millis();
 }

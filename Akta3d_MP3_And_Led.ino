@@ -120,8 +120,8 @@ void loop() {
   // PLAY/PAUSE BUTTON
   // Held: change loop mode (loop single, loop directory)
   if ( playButton.held() ) {
-    // TODO change loop
-    // TODO light alert
+    // TODO change loop mode
+    lightManager.playAlert({0, 0, 255});
   }
   
   // PLAY/PAUSE BUTTON
@@ -184,9 +184,15 @@ void loop() {
     Serial.print("Auto off : ");
     Serial.println(autoOff);
 
-    startAutoOffMillis = millis();
+    if(autoOff) {
+      startAutoOffMillis = millis();
+      lightManager.playAlert({255, 0, 0});
+    }
+    else {      
+      lightManager.playAlert({0, 255, 0});
+    }
     
-    // TODO light alert
+    
   }
 
   // ALERT BUTTON
