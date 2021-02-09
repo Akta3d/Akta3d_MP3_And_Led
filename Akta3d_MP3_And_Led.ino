@@ -21,12 +21,12 @@ ButtonEvents lightModeButton;
 #define ALERT_BUTTON_PIN D4
 ButtonEvents alertButton;
 
-// ----- POTAR ----------
+// ----- POTENTIOMETER ----------
 #define VOLUME_POT_PIN A0
 #define MAX_VOLUME 30
 Akta3d_Potentiometer volumePot(VOLUME_POT_PIN, 0, MAX_VOLUME);
 
-// ----- BUTTONS ----------
+// ----- LEDS ----------
 #define LED_PIN D8
 #define NB_LED 30
 LightManager lightManager(LED_PIN, NB_LED);
@@ -43,10 +43,19 @@ bool mp3Play = false;
 bool loopMp3 = false;
 int currentMp3Folder = 1;
 
+// ----- autoOff -------
+bool autoOff = false;
+uint16_t autoOffInMinutes = 15;
+uint16_t startAutoOffMillis = 0;
+
 void setup() {
   // Used for debugging messages
   Serial.begin(9600); 
 
+  Serial.println("");
+  Serial.println("");
+  Serial.println("Setup Start");
+  
   // attach buttons
   prevButton.attach(PREV_BUTTON_PIN ,INPUT );
   playButton.attach(PLAY_BUTTON_PIN ,INPUT );
@@ -72,18 +81,17 @@ void setup() {
   Serial.println("Setup OK");
 }
 
-void loop() {
-  //Serial.println("loop");
-  
+void loop() {  
   // update all buttons
-  prevButton.update();
-  
+  prevButton.update();  
   playButton.update();
   nextButton.update();
   lightModeButton.update();
   alertButton.update();
   volumePot.update();
 
+  // PREV BUTTON
+  // Held: prev folder
   if ( prevButton.held() ) {    
     currentMp3Folder -= 1;
     if(currentMp3Folder < 1) {
@@ -100,10 +108,24 @@ void loop() {
     Serial.print("Play folder ");
     Serial.println(currentMp3Folder);
   }
+
+
+  // PREV BUTTON
+  // Tapped: prev song
   if ( prevButton.tapped() ) {
     Serial.println("Play previous");
     mp3Player.previous();
   }
+
+  // PLAY/PAUSE BUTTON
+  // Held: change loop mode (loop single, loop directory)
+  if ( playButton.held() ) {
+    // TODO change loop
+    // TODO light alert
+  }
+  
+  // PLAY/PAUSE BUTTON
+  // Tapped: switch Play/pause
   if ( playButton.tapped() ) {
     mp3Play = !mp3Play;
     if(mp3Play) {
@@ -114,6 +136,9 @@ void loop() {
       Serial.println("Pause");
     }
   }
+
+  // NEXT BUTTON
+  // Held: next folder
   if ( nextButton.held() ) {
     currentMp3Folder += 1;
     if(currentMp3Folder > NB_MAX_MP3_FOLDER) {
@@ -130,25 +155,50 @@ void loop() {
     Serial.print("Play folder ");
     Serial.println(currentMp3Folder);
   }
+
+  // NEXT BUTTON
+  // Tapped: next song  
   if ( nextButton.tapped() ) {
     Serial.println("Play next");
     mp3Player.next();
   }
-  if ( lightModeButton.tapped() ) {
-    Serial.println("Change lightMode");
 
-    // test change mode
-    lightManager.nextMode();
-  }
-  if ( alertButton.held() ) {
+  // LIGHT BUTTON
+  // Held: chosse a radom color
+  if ( lightModeButton.held() ) {
+    Serial.println("Random color");    
     lightManager.setColor1({random(255), random(255), random(255)});
   }
+  
+  // LIGHT BUTTON
+  // Tapped: change lights mode 
+  if ( lightModeButton.tapped() ) {
+    Serial.println("Change lightMode");
+    lightManager.nextMode();
+  }
+
+  // ALERT BUTTON
+  // Held: Set timer to pause mp3 and set Light Off
+  if ( alertButton.held() ) {
+    autoOff = !autoOff;
+    Serial.print("Auto off : ");
+    Serial.println(autoOff);
+
+    startAutoOffMillis = millis();
+    
+    // TODO light alert
+  }
+
+  // ALERT BUTTON
+  // Tapped: play a random alert
   if ( alertButton.tapped() ) {
     Serial.println("Plat Alert");
 
     int randomAdvert = random(1, NB_MAX_MP3_ADVERT + 1);
     mp3Player.advertise(randomAdvert);       
   }
+
+  // VOLUME
   if ( volumePot.changed() ) {
     Serial.print("volumePot = ");
     Serial.println(volumePot.value());
@@ -160,6 +210,19 @@ void loop() {
 
   if (mp3Player.available()) {
     printDetail(mp3Player.readType(), mp3Player.read()); //Print the detail message from DFPlayer to handle different errors and states.
+  }
+
+  // AUTO-OFF
+  if(
+    autoOff &&
+    (startAutoOffMillis + (autoOffInMinutes * 1000 * 60) < millis())
+  ) {
+    autoOff = false;
+    
+    mp3Play = false;
+    mp3Player.pause();
+
+    lightManager.changeMode(OFF);
   }
 }
 
