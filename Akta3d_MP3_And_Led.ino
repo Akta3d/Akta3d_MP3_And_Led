@@ -24,7 +24,7 @@ ButtonEvents alertButton;
 // ----- POTAR ----------
 #define VOLUME_POT_PIN A0
 #define MAX_VOLUME 30
-Akta3d_Potentiometer volumePot(VOLUME_POT_PIN, MAX_VOLUME);
+Akta3d_Potentiometer volumePot(VOLUME_POT_PIN, 0, MAX_VOLUME);
 
 // ----- BUTTONS ----------
 #define LED_PIN D8
@@ -147,7 +147,7 @@ void loop() {
     Serial.println("Plat Alert");
 
     int randomAdvert = random(1, NB_MAX_MP3_ADVERT + 1);
-    mp3Player.advertise(randomAdvert);
+    mp3Player.advertise(randomAdvert);       
   }
   if ( volumePot.changed() ) {
     Serial.print("volumePot = ");
