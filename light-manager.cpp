@@ -90,7 +90,7 @@ void LightManager::setColor2(RGB color) {
   _currentLightType->setColor2(color);  
 }
 
-void LightManager::playAlert(RGB color) {
+void LightManager::displayAlert(RGB color) {
   uint32_t stripColor = _strip->Color(color.r, color.g, color.b);
   _strip->fill(stripColor, 0, _strip->numPixels());
   _strip->show();

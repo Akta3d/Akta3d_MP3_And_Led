@@ -122,6 +122,7 @@ void loop() {
   if ( playButton.held() ) {
     // TODO change loop mode
     lightManager.playAlert({0, 0, 255});
+    lightManager.displayAlert({0, 0, 255});
   }
   
   // PLAY/PAUSE BUTTON
@@ -186,10 +187,10 @@ void loop() {
 
     if(autoOff) {
       startAutoOffMillis = millis();
-      lightManager.playAlert({255, 0, 0});
+      lightManager.displayAlert({255, 0, 0});
     }
     else {      
-      lightManager.playAlert({0, 255, 0});
+      lightManager.displayAlert({0, 255, 0});
     }
     
     

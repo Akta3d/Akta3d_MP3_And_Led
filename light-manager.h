@@ -43,7 +43,7 @@ class LightManager
     void setColor2(RGB color);
     void setParam(int param);
 
-    void playAlert(RGB color);
+    void displayAlert(RGB color);
     
   private:
     int _pin;
