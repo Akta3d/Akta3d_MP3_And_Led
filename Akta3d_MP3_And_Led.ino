@@ -39,7 +39,7 @@ const bool MP3_START_AFTER_FAIL = true; // allow to force start after a fail fro
 SoftwareSerial mp3Serial(MP3_RX_PIN, MP3_TX_PIN);
 DFRobotDFPlayerMini mp3Player;
 bool mp3Started = false;
-bool mp3Play = false;
+bool mp3Playing = false;
 bool loopTrack = false; // loop current track, otherwise loop on all the directory
 int currentMp3Folder = 1;
 
@@ -139,8 +139,8 @@ void loop() {
   // PLAY/PAUSE BUTTON
   // Tapped: switch Play/pause
   if ( playButton.tapped() ) {
-    mp3Play = !mp3Play;
-    if(mp3Play) {
+    mp3Playing = !mp3Playing;
+    if(mp3Playing) {
       if(!mp3Started) {
         mp3Started = true;
         playOrLoopFirstSong();
@@ -237,7 +237,7 @@ void loop() {
   ) {
     autoOff = false;
     
-    mp3Play = false;
+    mp3Playing = false;
     mp3Player.pause();
 
     lightManager.changeMode(OFF);
@@ -248,13 +248,13 @@ void printDetail(uint8_t type, int value){
   switch (type) {
     case TimeOut:
       Serial.println(F("Time Out!"));
-      if(MP3_START_AFTER_FAIL && mp3Play) {
+      if(MP3_START_AFTER_FAIL && mp3Playing) {
         mp3Player.start();
       }
       break;
     case WrongStack:
       Serial.println(F("Stack Wrong!"));
-      if(MP3_START_AFTER_FAIL && mp3Play) {
+      if(MP3_START_AFTER_FAIL && mp3Playing) {
         mp3Player.start();
       }
       break;
@@ -266,7 +266,7 @@ void printDetail(uint8_t type, int value){
       break;
     case DFPlayerCardOnline:
       Serial.println(F("Card Online!"));
-      if(MP3_START_AFTER_FAIL && mp3Play) {
+      if(MP3_START_AFTER_FAIL && mp3Playing) {
         mp3Player.start();
       }
       break;
@@ -286,7 +286,7 @@ void printDetail(uint8_t type, int value){
           break;
         case SerialWrongStack:
           Serial.println(F("Get Wrong Stack"));
-          if(MP3_START_AFTER_FAIL && mp3Play) {
+          if(MP3_START_AFTER_FAIL && mp3Playing) {
             mp3Player.start();
           }
           break;
