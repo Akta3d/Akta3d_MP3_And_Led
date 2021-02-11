@@ -12,9 +12,9 @@ LightManager::LightManager(uint16_t pin, uint16_t nbLed) {
   _lightTypeOff = new LightTypeOff(_strip);
   _lightTypeSingle = new LightTypeSingle(_strip);
   _lightTypeRandomGradation = new LightTypeRandomGradation(_strip, 100 /* speedspeedMs */);
-  _lightTypeRandom = new LightTypeRandom(_strip, 200 /* speed */);
+  _lightTypeFadeInFadeOut = new LightTypeFadeInFadeOut(_strip, 25 /* nbStep */, 100 /* speedspeedMs */);
   _lightTypeRandom = new LightTypeRandom(_strip, 200 /* speedMs */);
-  
+
   changeMode(SINGLE);
 }
 
@@ -31,6 +31,10 @@ void LightManager::changeMode(uint16_t mode) {
     break;
     case RANDOM_GRADATION:
       _currentLightType = _lightTypeRandomGradation;
+      _currentMode = mode;
+    break;
+    case FADE:
+      _currentLightType = _lightTypeFadeInFadeOut;
       _currentMode = mode;
     break;
     case RANDOM:

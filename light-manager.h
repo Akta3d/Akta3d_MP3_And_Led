@@ -6,18 +6,20 @@
 #include "light-type-off.h"
 #include "light-type-single.h"
 #include "light-type-random-gradation.h"
+#include "light-type-fadein-fadeout.h"
 #include "light-type-random.h"
 #include "rgb-struct.h"
 
 #define ALERT_DURATION 500
 
-#define MAX_LIGHT_MODES 3 // should be equal to maw enum value, used during choosing a random mode
+#define MAX_LIGHT_MODES 4 // should be equal to maw enum value, used during choosing a random mode
 
 enum lightMode {
   OFF = 0,
   SINGLE = 1,
-  RANDOM_GRADATION = 2,
-  RANDOM = 3,
+  FADE = 2,
+  RANDOM_GRADATION = 3,
+  RANDOM = 4,
 };
 
 class LightManager
@@ -57,6 +59,7 @@ class LightManager
     LightTypeOff* _lightTypeOff;  
     LightTypeSingle* _lightTypeSingle;  
     LightTypeRandomGradation* _lightTypeRandomGradation;  
+    LightTypeFadeInFadeOut* _lightTypeFadeInFadeOut;  
     LightTypeRandom* _lightTypeRandom; 
 
     uint16_t _alertMillis;
