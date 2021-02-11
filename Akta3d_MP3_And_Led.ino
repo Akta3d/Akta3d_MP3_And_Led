@@ -4,7 +4,6 @@
 #include "SoftwareSerial.h"
 #include "DFRobotDFPlayerMini.h"
 
-
 // ----- BUTTONS ----------
 #define PREV_BUTTON_PIN D0
 ButtonEvents prevButton;
@@ -39,8 +38,9 @@ LightManager lightManager(LED_PIN, NB_LED);
 const bool MP3_START_AFTER_FAIL = true; // allow to force start after a fail from MP3 player
 SoftwareSerial mp3Serial(MP3_RX_PIN, MP3_TX_PIN);
 DFRobotDFPlayerMini mp3Player;
+bool mp3Started = false;
 bool mp3Play = false;
-bool loopMp3 = false;
+bool loopTrack = false; // loop current track, otherwise loop on all the directory
 int currentMp3Folder = 1;
 
 // ----- autoOff -------
@@ -73,12 +73,21 @@ void setup() {
     Serial.println(F("2.Please insert the SD card!"));
     while(true);
   }
+  
   mp3Player.setTimeOut(500); //Set serial communictaion time out 500ms
-  mp3Player.outputDevice(DFPLAYER_DEVICE_SD);
-  mp3Player.disableLoop(); //disable loop.
+  mp3Player.outputDevice(DFPLAYER_DEVICE_SD); 
   mp3Player.volume(10);
   
   Serial.println("Setup OK");
+}
+
+void playOrLoopFirstSong() {
+  if(loopTrack) {      
+    mp3Player.playFolder(currentMp3Folder, 1);  
+    mp3Player.enableLoop();        
+  } else {
+    mp3Player.loopFolder(currentMp3Folder);           
+  }
 }
 
 void loop() {  
@@ -98,12 +107,7 @@ void loop() {
       currentMp3Folder = NB_MAX_MP3_FOLDER;
     }
     
-    if(loopMp3) {      
-      mp3Player.loopFolder(currentMp3Folder);
-      //mp3Player.play(1);
-    } else {
-      mp3Player.playFolder(currentMp3Folder, 1);
-    }
+    playOrLoopFirstSong();
     
     Serial.print("Play folder ");
     Serial.println(currentMp3Folder);
@@ -113,15 +117,22 @@ void loop() {
   // PREV BUTTON
   // Tapped: prev song
   if ( prevButton.tapped() ) {
-    Serial.println("Play previous");
-    mp3Player.previous();
+    Serial.println("Play previous"); 
+    mp3Player.previous();     
   }
 
   // PLAY/PAUSE BUTTON
   // Held: change loop mode (loop single, loop directory)
   if ( playButton.held() ) {
     // TODO change loop mode
-    lightManager.playAlert({0, 0, 255});
+    loopTrack = !loopTrack;
+    if(loopTrack) {
+      mp3Player.enableLoop();     
+    } else { 
+      playOrLoopFirstSong();      
+    }
+    Serial.print("Loop mode : ");
+    Serial.println(loopTrack ? "Loop track" : "Loop Directory");
     lightManager.displayAlert({0, 0, 255});
   }
   
@@ -130,7 +141,12 @@ void loop() {
   if ( playButton.tapped() ) {
     mp3Play = !mp3Play;
     if(mp3Play) {
-      mp3Player.start();      
+      if(!mp3Started) {
+        mp3Started = true;
+        playOrLoopFirstSong();
+      } else {
+        mp3Player.start();       
+      }
       Serial.println("Play");
     } else {
       mp3Player.pause();
@@ -146,12 +162,7 @@ void loop() {
       currentMp3Folder = 1;
     }
     
-    if(loopMp3) {      
-      mp3Player.loopFolder(currentMp3Folder);
-      //mp3Player.play(1);
-    } else {
-      mp3Player.playFolder(currentMp3Folder, 1);
-    }
+    playOrLoopFirstSong();
     
     Serial.print("Play folder ");
     Serial.println(currentMp3Folder);
@@ -201,8 +212,8 @@ void loop() {
   if ( alertButton.tapped() ) {
     Serial.println("Plat Alert");
 
-    int randomAdvert = random(1, NB_MAX_MP3_ADVERT + 1);
-    mp3Player.advertise(randomAdvert);       
+    int randomAdvert = random(1, NB_MAX_MP3_ADVERT + 1); 
+    mp3Player.advertise(randomAdvert);           
   }
 
   // VOLUME
