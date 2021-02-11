@@ -9,13 +9,14 @@
 class LightTypeRandom : public LightType
 {
   public:
-    LightTypeRandom(Adafruit_NeoPixel* strip, int speed);
+    LightTypeRandom(Adafruit_NeoPixel* strip, uint16_t speedMs);
     virtual void init();
     virtual void loop();
+    virtual void setParam(int speedMs) {_speedMs = speedMs;};
     
   private:
-    int _speed;   
-    unsigned long _lastMillis;
+    uint16_t _speedMs;   
+    uint16_t _lastMillis;
     
 };
 

@@ -1,8 +1,8 @@
 #include "light-type-random.h"
 
-LightTypeRandom::LightTypeRandom(Adafruit_NeoPixel* strip, int speed)
+LightTypeRandom::LightTypeRandom(Adafruit_NeoPixel* strip, uint16_t speedMs)
 :LightType(strip) {
-  _speed = speed;
+  _speedMs = speedMs;
 }
 
 void LightTypeRandom::init() {  
@@ -10,11 +10,12 @@ void LightTypeRandom::init() {
 }
 
 void LightTypeRandom::loop() {
-  if(millis() - _lastMillis >= _speed) {
-    for(int i = 0 ; i < _strip->numPixels() ; i += 1) {
+  if(millis() - _lastMillis >= _speedMs) {
+    for(uint16_t i = 0 ; i < _strip->numPixels() ; i += 1) {
       _strip->setPixelColor(i, random(255), random(255), random(255));
     }
     _strip->show();
     _lastMillis = millis();
   }
 }
+

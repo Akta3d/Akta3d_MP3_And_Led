@@ -1,7 +1,7 @@
 #include "light-manager.h"
 #include "light-type-single.h"
 
-LightManager::LightManager(int pin, int nbLed) {
+LightManager::LightManager(uint16_t pin, uint16_t nbLed) {
   _pin = pin;
   _nbLed = nbLed;
   _currentMode = OFF;
@@ -11,8 +11,9 @@ LightManager::LightManager(int pin, int nbLed) {
   _strip = new Adafruit_NeoPixel(_nbLed, _pin, NEO_GRB + NEO_KHZ800);
   _lightTypeOff = new LightTypeOff(_strip);
   _lightTypeSingle = new LightTypeSingle(_strip);
-  _lightTypeRandomGradation = new LightTypeRandomGradation(_strip, 100 /* speed */);
+  _lightTypeRandomGradation = new LightTypeRandomGradation(_strip, 100 /* speedspeedMs */);
   _lightTypeRandom = new LightTypeRandom(_strip, 200 /* speed */);
+  _lightTypeRandom = new LightTypeRandom(_strip, 200 /* speedMs */);
   
   changeMode(SINGLE);
 }
@@ -22,7 +23,7 @@ void LightManager::setup() {
   _strip->show(); // set all led to off
 }
 
-void LightManager::changeMode(int mode) {
+void LightManager::changeMode(uint16_t mode) {
   switch(mode) {
     case SINGLE:
       _currentLightType = _lightTypeSingle;
@@ -50,7 +51,7 @@ void LightManager::nextMode() {
     _previousMode = _currentMode;
     changeMode(OFF);
   } else {
-    int nextMode = _previousMode + 1;
+    uint16_t nextMode = _previousMode + 1;
     if(nextMode > MAX_LIGHT_MODES) {
       nextMode = 1;
     }

@@ -23,13 +23,13 @@ enum lightMode {
 class LightManager
 {
   public:
-    LightManager(int pin, int nbLed);
+    LightManager(uint16_t pin, uint16_t nbLed);
 
     // need be called during arduino setup
     void setup(); 
 
     // choose a specific lightType
-    void changeMode(int mode);
+    void changeMode(uint16_t mode);
 
     void nextMode();
     
@@ -46,10 +46,10 @@ class LightManager
     void displayAlert(RGB color);
     
   private:
-    int _pin;
-    int _nbLed;
-    int _currentMode; 
-    int _previousMode;  
+    uint16_t _pin;
+    uint16_t _nbLed;
+    uint16_t _currentMode; 
+    uint16_t _previousMode;  
   
     Adafruit_NeoPixel* _strip;
     LightType* _currentLightType;

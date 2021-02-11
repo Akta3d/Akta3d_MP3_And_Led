@@ -14,6 +14,8 @@ class LightTypeSingle : public LightType
     
     virtual void setColor1(RGB color);
     virtual void setColor2(RGB color);
+
+  private:
     void setColor(RGB color);
     
   private:

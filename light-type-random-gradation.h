@@ -9,21 +9,21 @@
 class LightTypeRandomGradation : public LightType
 {
   public:
-    LightTypeRandomGradation(Adafruit_NeoPixel* strip, int speed);
+    LightTypeRandomGradation(Adafruit_NeoPixel* strip, uint16_t speedMs);
     virtual void init();
     virtual void loop();
 
   private:
     double diffAbs(byte last, byte current);
-    byte computeValueAt(byte last, byte current, int i);
-    void renderLED(int i);
+    byte computeValueAt(byte last, byte current, uint16_t i);
+    void renderLED(uint16_t i);
     
   private:
-    int _speed;
+    uint16_t _speedMs;
     RGB _color;
     RGB _lastColor;    
-    int _currentLED;
-    unsigned long _lastMillis;
+    uint16_t _currentLED;
+    uint16_t _lastMillis;
     
 };
 
