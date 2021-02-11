@@ -98,7 +98,14 @@ void loop() {
   lightModeButton.update();
   alertButton.update();
   volumePot.update();
-
+  
+  // PREV BUTTON
+  // Tapped: prev song
+  if ( prevButton.tapped() ) {
+    Serial.println("Play previous"); 
+    mp3Player.previous();     
+  }
+  
   // PREV BUTTON
   // Held: prev folder
   if ( prevButton.held() ) {    
@@ -111,29 +118,6 @@ void loop() {
     
     Serial.print("Play folder ");
     Serial.println(currentMp3Folder);
-  }
-
-
-  // PREV BUTTON
-  // Tapped: prev song
-  if ( prevButton.tapped() ) {
-    Serial.println("Play previous"); 
-    mp3Player.previous();     
-  }
-
-  // PLAY/PAUSE BUTTON
-  // Held: change loop mode (loop single, loop directory)
-  if ( playButton.held() ) {
-    // TODO change loop mode
-    loopTrack = !loopTrack;
-    if(loopTrack) {
-      mp3Player.enableLoop();     
-    } else { 
-      playOrLoopFirstSong();      
-    }
-    Serial.print("Loop mode : ");
-    Serial.println(loopTrack ? "Loop track" : "Loop Directory");
-    lightManager.displayAlert({0, 0, 255});
   }
   
   // PLAY/PAUSE BUTTON
@@ -153,7 +137,29 @@ void loop() {
       Serial.println("Pause");
     }
   }
+  
+  // PLAY/PAUSE BUTTON
+  // Held: change loop mode (loop single, loop directory)
+  if ( playButton.held() ) {
+    // TODO change loop mode
+    loopTrack = !loopTrack;
+    if(loopTrack) {
+      mp3Player.enableLoop();     
+    } else { 
+      playOrLoopFirstSong();      
+    }
+    Serial.print("Loop mode : ");
+    Serial.println(loopTrack ? "Loop track" : "Loop Directory");
+    lightManager.displayAlert({0, 0, 255});
+  }
 
+  // NEXT BUTTON
+  // Tapped: next song  
+  if ( nextButton.tapped() ) {
+    Serial.println("Play next");
+    mp3Player.next();
+  }
+  
   // NEXT BUTTON
   // Held: next folder
   if ( nextButton.held() ) {
@@ -167,20 +173,6 @@ void loop() {
     Serial.print("Play folder ");
     Serial.println(currentMp3Folder);
   }
-
-  // NEXT BUTTON
-  // Tapped: next song  
-  if ( nextButton.tapped() ) {
-    Serial.println("Play next");
-    mp3Player.next();
-  }
-
-  // LIGHT BUTTON
-  // Held: chosse a radom color
-  if ( lightModeButton.held() ) {
-    Serial.println("Random color");    
-    lightManager.setColor1({random(255), random(255), random(255)});
-  }
   
   // LIGHT BUTTON
   // Tapped: change lights mode 
@@ -188,7 +180,23 @@ void loop() {
     Serial.println("Change lightMode");
     lightManager.nextMode();
   }
+  
+  // LIGHT BUTTON
+  // Held: chosse a radom color
+  if ( lightModeButton.held() ) {
+    Serial.println("Random color");    
+    lightManager.setColor1({random(255), random(255), random(255)});
+  }
 
+  // ALERT BUTTON
+  // Tapped: play a random alert
+  if ( alertButton.tapped() ) {
+    Serial.println("Plat Alert");
+
+    int randomAdvert = random(1, NB_MAX_MP3_ADVERT + 1); 
+    mp3Player.advertise(randomAdvert);           
+  }
+  
   // ALERT BUTTON
   // Held: Set timer to pause mp3 and set Light Off
   if ( alertButton.held() ) {
@@ -203,17 +211,6 @@ void loop() {
     else {      
       lightManager.displayAlert({0, 255, 0});
     }
-    
-    
-  }
-
-  // ALERT BUTTON
-  // Tapped: play a random alert
-  if ( alertButton.tapped() ) {
-    Serial.println("Plat Alert");
-
-    int randomAdvert = random(1, NB_MAX_MP3_ADVERT + 1); 
-    mp3Player.advertise(randomAdvert);           
   }
 
   // VOLUME
