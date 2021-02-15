@@ -1,11 +1,9 @@
 /*
 TODO :
-- Wy wifi don't work with electronics
-- LightMode in WebApp
-- WebApp manifest
+- Why wifi don't work with electronics
+- LightMode in WebApp (shutdown should send OFF)
 
 - Start and stop WIFI from button
-- Test Wifi reconnection
 - Add hardware connection (without buttons, with buttons, with Arduino MEGA)
 */
 #define USE_WIFI          // if define, allow to control mp3 and lights from wifi. See nodeJs repo to have the webServer
@@ -638,6 +636,8 @@ void shutDown() {
   mp3Player.pause();
 
   lightManager.changeMode(OFF);
+
+  notifyAllWsClients("mp3Playing:" + String(mp3Playing));
 }
 
 /*

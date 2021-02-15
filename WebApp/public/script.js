@@ -120,6 +120,11 @@ function onMessage(event) {
 // --------------- SETUP ------------------------
 window.addEventListener('load', onLoad);
 function onLoad(event) {
+    // register the service worker to have a progressive WebApp
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js');
+    }
+
     var localIp = localStorage.getItem('gatewayIp');
     if(localIp) {
         gatewayIp = localIp;

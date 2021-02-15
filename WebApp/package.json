@@ -1,0 +1,11 @@
+{
+  "name": "yuna-lights",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "http-server -p 8080 ./public"
+  },
+  "private": true,
+  "dependencies": {
+    "http-server": "^0.12.3"
+  }
+}

@@ -122,5 +122,12 @@ It's easy to add different light mode:
 
 ## Web App
 A sample web app is available. It allow to control "all" main feature directly from a browser.  
-Just need set the gateway ip in code or in connection gui. During save, the ip is stored in LocalStorage. 
-Possibility to install the webApp on smartphone.
+Just need set the gateway ip in code or in connection gui. During save, the ip is stored in LocalStorage.
+
+### Progressive Web App
+Allow to install the webApp on smartphone.  
+We need start a webserver, for the first time ton serve index.html then install the web app.  
+- cd WebApp
+- npm i
+- npm start
+- go to 127.0.0.1:8080 or youtIp:8080 then install the WebApp
