@@ -13,10 +13,7 @@ class LightTypeSingle : public LightType
     virtual void init();
     
     virtual void setColor1(RGB color);
-    virtual void setColor2(RGB color);
-
-  private:
-    void setColor(RGB color);
+    virtual RGB getColor1() {return _currentColor;};
     
   private:
     RGB _currentColor;

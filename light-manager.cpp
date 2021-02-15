@@ -95,10 +95,36 @@ void LightManager::setColor2(RGB color) {
   _currentLightType->setColor2(color);  
 }
 
+void LightManager::setParam(int param) {
+  _currentLightType->setParam(param);  
+}
+
+RGB LightManager::getColor1() {
+  return _currentLightType->getColor1();
+}
+
+RGB LightManager::getColor2() {
+  return _currentLightType->getColor2();  
+}
+
+int LightManager::getParam() {
+  return _currentLightType->getParam();  
+}
+
 void LightManager::displayAlert(RGB color) {
   uint32_t stripColor = _strip->Color(color.r, color.g, color.b);
   _strip->fill(stripColor, 0, _strip->numPixels());
   _strip->show();
 
   _alertMillis = millis();
+}
+
+void LightManager::blinkRedFirstLED() {
+  _strip->setPixelColor(0, 255/*R*/, 0/*G*/, 0/*B*/);
+  _strip->show();;
+  delay(500);
+
+  _strip->setPixelColor(0, 0, 0, 0);
+  _strip->show();
+  delay(500);
 }

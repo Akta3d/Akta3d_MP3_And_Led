@@ -14,6 +14,10 @@ class LightType
     virtual void setColor2(RGB color) {};
     virtual void setParam(int param) {};
 
+    virtual RGB getColor1() {return {0,0,0};};
+    virtual RGB getColor2() {return {0,0,0};};
+    virtual int getParam() {return 0;};
+
     Adafruit_NeoPixel* _strip;
 };
 

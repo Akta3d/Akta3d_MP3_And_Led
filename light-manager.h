@@ -44,8 +44,16 @@ class LightManager
     void setColor1(RGB color);
     void setColor2(RGB color);
     void setParam(int param);
+    RGB getColor1();
+    RGB getColor2();
+    int getParam();
 
+    // Disaply all LEDS on color during ALERT_DURATION millisecond
     void displayAlert(RGB color);
+
+    // Can be used to notify an error by bliking the first led in RED
+    void blinkRedFirstLED();
+
     
   private:
     uint16_t _pin;
