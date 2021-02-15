@@ -12,14 +12,6 @@ void LightTypeSingle::init() {
 }
 
 void LightTypeSingle::setColor1(RGB color) {
-  setColor(color);
-}
-
-void LightTypeSingle::setColor2(RGB color) {
-  setColor(color);
-}
-
-void LightTypeSingle::setColor(RGB color) {
   _currentColor = color;
   init();
 }

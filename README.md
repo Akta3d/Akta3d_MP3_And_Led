@@ -1,48 +1,88 @@
 # Yuna Lights
 
 Initially develop to construct a light and a MP3 player for my baby.  
-Use Wemos D1 D2 mini.
-  
+Use: 
+- Wemos D1 D2 mini.
+- RGB Leds
+- DFPlayerMini
+- Speaker
+- Buttons with resistors (Optional)
+- Potentiometer (Optional)
+- WebSocket (Optional)  
 ## Features
 - MP3
-  - Allow to play MP3 song in multiple directories
-  - Allow to play an arbitrary alert from a pressed button
+  - Allow to play MP3 tracks in multiple directories
+  - Allow to play an arbitrary alert
   - Allow to change loop mode
 
 - Lights
-  - Allow to change the light mode from a pressed button
+  - Allow to change the lights mode
   - Multiple mode are provided:
     - OFF
     - A single color
-      - Allow change the colors from a pressed button
+      - Allow change the colors
     - Gradient between 2 colors
+      - Allow change speed
+    - FadeIn / FadeOut
+      - Allow change the colors
+      - Allow change speed
     - Random colors
+      - Allow change speed
 
-- Auto-off
-  - Stop MP3 and light after 15 minutes if active
+- Auto Shut down
+  - Stop MP3 and lights after 15 (default) minutes if enabled
+
+- Control from hardware buttons if USE_ELECTRONICS is defined
+- Control from a WebApp through WebSocket if USE_WIFI is defined 
  
-## Button actions
+## Buttons actions
 - Prev button
-  - tapped : previous song
+  - tapped : previous track
   - held : previous directory
 - Play/Pause button
   - tapped : switch Play/Pause
-  - held : switch Loop directory / Loop song
+  - held : switch Loop directory / Loop track
 - Next button
-  - tapped : next song
+  - tapped : next track
   - held : next directory
 - Light button
   - tapped : change light mode to next mode (off all lights before change mode)
   - held : choose a random color1 for the current light mode
 - Alert button
   - tapped : play a random alert
-  - held : switch on/off the timer to stop MP3 and lights
+  - held : switch on/off the timer to stop MP3 and lights (shut down)
+- Potentiometer to adjust volume
+
+## WebSocket actions
+- setLightsModeColor1 : value format = r,g,b
+- setLightsModeColor2 : value format = r,g,b
+- setLightsModeParam : value should be an int
+- nextLightsMode
+- changeLightsMode : value should be an int and should be is managed by LightManager
+- playPreviousTrack
+- playPreviousDirectory
+- switchPlayPause
+- switchLoopMode
+- playNextTrack
+- playNextDirectory
+- playRandomAlert
+- setVolume : value should be an int [0, 30]
+- switchShutDown
+- shutDownMinutes : value should be an int
+- shutDown
  
 ## Dependencies
+Base :
 - Adafruit_NeoPixel
+- DFRobotDFPlayerMini
+
+With hardware buttons
 - Akta3d_Potentiometer
 - ButtonEvents
-- DFRobotDFPlayerMini
+
+With WebSockets
+- ESP8266WiFi
+- ESPAsyncWebServer
 
 ## SD Card directories
 - root  
@@ -78,3 +118,16 @@ It's easy to add different light mode:
  
 3- In lightManager.cpp  
  - instanciate your lightMode in constructor
+ - add your lights mode in the switch of LightManager::changeMode
+
+## Web App
+A sample web app is available. It allow to control "all" main feature directly from a browser.  
+Just need set the gateway ip in code or in connection gui. During save, the ip is stored in LocalStorage.
+
+### Progressive Web App
+Allow to install the webApp on smartphone.  
+We need start a webserver, for the first time ton serve index.html then install the web app.  
+- cd WebApp
+- npm i
+- npm start
+- go to 127.0.0.1:8080 or your_Ip:8080 then install the WebApp

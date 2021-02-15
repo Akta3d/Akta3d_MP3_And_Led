@@ -13,6 +13,7 @@ class LightTypeRandom : public LightType
     virtual void init();
     virtual void loop();
     virtual void setParam(int speedMs) {_speedMs = speedMs;};
+    virtual int getParam() {return _speedMs;};
     
   private:
     uint16_t _speedMs;   

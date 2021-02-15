@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Yuna Lights</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#471B51">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#471B51"/>
+
+    <link type="text/css" rel="stylesheet" href="./style.css" />
+  </head>
+
+  <body>
+    <div class="topnav">
+      <h1>Yuna Lights</h1>
+    </div>
+
+    <div id="connectionGui">
+      <h2>WebSocket Connection</h2>
+
+      <label for="gatewayIpInput" class="label">Gateway IP for WebSocket connection</label>
+      <input id="gatewayIpInput" class="input">
+      <button id="changeGatewayIpButton" class="button">OK</button>
+      <p id="connectionMessage"></p>
+    </div>
+
+    <div id="mainGui">
+      <div class="card mp3">
+        <div class="head">
+          <h2>MP3</h2>
+        </div>
+        <div class="content center">
+          <div>
+            <button id="prevTrackButton" class="button">Prev</button>
+            <button id="playPauseButton" class="button">%PLAY_MODE%</button>
+            <button id="nextTrackButton" class="button">Next</button>
+          </div>
+          <div>
+            <button id="prevDirButton" class="button">Prev Dir</button>
+            <button id="loopButton" class="button">%LOOP_MODE%</button>
+            <button id="nextDirButton" class="button">Next Dir</button>
+          </div>      
+          <div>          
+            <label for="volumeSlider" id="volumeLabel" class="label">Volume : %VOLUME%</label>
+            <input type="range" id="volumeSlider" min="0" max="30">
+          </div>  
+        </div>
+      </div>
+
+      <div class="card lightsMode">
+        <div class="head">
+          <h2>Ligths Mode</h2>
+        </div>
+        <div class="content">
+          <div>          
+            <label for="color1Picker" id="color1Label" class="label">Color 1</label>
+            <input type="color" id="color1Picker">
+          </div>  
+          <div>          
+            <label for="color2Picker" id="color2Label" class="label">Color 2</label>
+            <input type="color" id="color2Picker">
+          </div>       
+          <div>
+            <input id="lightsModeParamInput" class="input">
+          </div>    
+        </div>
+      </div>
+
+      <div class="card shutDown">
+        <div class="head">
+          <h2>Shut Down</h2>
+        </div>
+        <div class="content">
+          <div class="flexHoriz">
+            <div>
+              <label for="shutDownMinuteInput" class="label">Shut down after X minutes</label>
+              <input type="number" id="shutDownMinuteInput" class="input">
+            </div> 
+            <div>
+              <button id="shutDownTimerButton" class="button">%SHUT_DOWN%</button>
+            </div>
+          </div>
+          <div>
+            <button id="shutDownButton" class="button">Shut down</button>
+          </div>  
+        </div>
+      </div>
+    </div>
+
+  <script src="./script.js"></script>
+  </body>
+</html>

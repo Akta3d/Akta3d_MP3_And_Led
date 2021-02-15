@@ -14,11 +14,12 @@ class LightTypeFadeInFadeOut : public LightType
     virtual void loop();
     
     virtual void setColor1(RGB color);
-    virtual void setColor2(RGB color);
     virtual void setParam(int speedMs) {_speedMs = speedMs;};
-    
+
+    virtual RGB getColor1() {return _currentColor;};
+    virtual int getParam() {return _speedMs;};
+
   private: 
-    void setColor(RGB color);
     uint32_t getFadeColor();
     void setLightsColor();
 

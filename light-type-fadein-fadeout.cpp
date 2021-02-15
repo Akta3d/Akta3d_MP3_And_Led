@@ -16,14 +16,6 @@ void LightTypeFadeInFadeOut::init() {
 }
 
 void LightTypeFadeInFadeOut::setColor1(RGB color) {
-  setColor(color);
-}
-
-void LightTypeFadeInFadeOut::setColor2(RGB color) {
-  setColor(color);
-}
-
-void LightTypeFadeInFadeOut::setColor(RGB color) {
   _currentColor = color;
   init();
 }

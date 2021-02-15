@@ -12,7 +12,9 @@ class LightTypeRandomGradation : public LightType
     LightTypeRandomGradation(Adafruit_NeoPixel* strip, uint16_t speedMs);
     virtual void init();
     virtual void loop();
-
+    virtual void setParam(int speedMs) {_speedMs = speedMs;};
+    virtual int getParam() {return _speedMs;};
+    
   private:
     double diffAbs(byte last, byte current);
     byte computeValueAt(byte last, byte current, uint16_t i);
