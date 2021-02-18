@@ -3,8 +3,8 @@ TODO :
 - LightMode in WebApp (shutdown should send OFF)
 
 - Start and stop WIFI from button
-- Add hardware connection (with buttons and without buttons)
-- Add TFT Touchscreen connection with Arduino MEGA
+- README : Add hardware connection (with buttons and without buttons)
+- README : Add TFT Touchscreen connection with Arduino MEGA
 */
 #define USE_WIFI          // if define, allow to control mp3 and lights from wifi. See nodeJs repo to have the webServer
 #define USE_ELECTRONICS   // if define, allow to control mp3 and lights from hardware buttons and potentiometer
@@ -32,7 +32,7 @@ TODO :
 // ----- LEDS ----------
 #define LED_PIN D8
 #define NB_LED 30
-LightManager lightManager(LED_PIN, NB_LED);
+LightManager lightManager(LED_PIN, NB_LED, NEO_BGR + NEO_KHZ800);
 
 // ----- MP3 ----------
 #define NB_MAX_MP3_ADVERT 3
@@ -91,7 +91,7 @@ void setup() {
   Serial.println("Setup Start");
 
   lightManager.setup();
-
+  
 #ifdef USE_WIFI
   // Connect to Wi-Fi
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -345,13 +345,13 @@ void notifyAllWsClients(String data) {
 
         int pos = value.indexOf(',');
         if(pos != -1) {
-          red = value.substring(0, pos).toInt() / 255.0 * 100;
+          red = value.substring(0, pos).toInt();
           value = value.substring(pos+1);
         }
         pos = value.indexOf(',');
         if(pos != -1) {
-          green = value.substring(0, pos).toInt() / 255.0 * 100;
-          blue = value.substring(pos+1).toInt() / 255.0 * 100;
+          green = value.substring(0, pos).toInt();
+          blue = value.substring(pos+1).toInt();
         }
         setLightsModeColor1({red, green, blue});
       }
@@ -362,13 +362,13 @@ void notifyAllWsClients(String data) {
 
         int pos = value.indexOf(',');
         if(pos != -1) {
-          red = value.substring(0, pos).toInt() / 255.0 * 100;
+          red = value.substring(0, pos).toInt();
           value = value.substring(pos+1);
         }
         pos = value.indexOf(',');
         if(pos != -1) {
-          green = value.substring(0, pos).toInt() / 255.0 * 100;
-          blue = value.substring(pos+1).toInt() / 255.0 * 100;
+          green = value.substring(0, pos).toInt();
+          blue = value.substring(pos+1).toInt();
         }
         setLightsModeColor2({red, green, blue});
       }
@@ -564,7 +564,7 @@ void setLightsModeColor1(RGB color) {
   
   lightManager.setColor1(color);
 
-  notifyAllWsClients("lightsModeColor1:" + String(color.r) + String(color.g) + String(color.b));
+  notifyAllWsClients("lightsModeColor1:" + String(color.r) + "," + String(color.g) + "," + String(color.b));
 }
 
 void setLightsModeColor2(RGB color) {
@@ -578,7 +578,7 @@ void setLightsModeColor2(RGB color) {
   
   lightManager.setColor2(color);
 
-  notifyAllWsClients("lightsModeColor2:" + String(color.r) + String(color.g) + String(color.b));
+  notifyAllWsClients("lightsModeColor2:" + String(color.r) + "," + String(color.g) + "," + String(color.b));
 }
 
 void setLightsModeParam(int value) {

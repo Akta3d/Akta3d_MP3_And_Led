@@ -25,7 +25,7 @@ enum lightMode {
 class LightManager
 {
   public:
-    LightManager(uint16_t pin, uint16_t nbLed);
+    LightManager(uint16_t pin, uint16_t nbLed, neoPixelType pixelType = NEO_GRB + NEO_KHZ800);
 
     // need be called during arduino setup
     void setup(); 

@@ -186,7 +186,9 @@ function initMainGuiEventListeners() {
     document.getElementById('volumeSlider').addEventListener('change', onVolumeSlider);
 
     // lights mode
+    document.getElementById('color1Picker').addEventListener('input', onColor1Picker);
     document.getElementById('color1Picker').addEventListener('change', onColor1Picker);
+    document.getElementById('color2Picker').addEventListener('input', onColor2Picker);
     document.getElementById('color2Picker').addEventListener('change', onColor2Picker);
     document.getElementById('lightsModeParamInput').addEventListener('change', onLightsModeParamInput);    
 

@@ -1,14 +1,14 @@
 #include "light-manager.h"
 #include "light-type-single.h"
 
-LightManager::LightManager(uint16_t pin, uint16_t nbLed) {
+LightManager::LightManager(uint16_t pin, uint16_t nbLed, neoPixelType pixelType) {
   _pin = pin;
   _nbLed = nbLed;
   _currentMode = OFF;
   _previousMode = OFF;
   _alertMillis = 0;
 
-  _strip = new Adafruit_NeoPixel(_nbLed, _pin, NEO_GRB + NEO_KHZ800);
+  _strip = new Adafruit_NeoPixel(_nbLed, _pin, pixelType);
   _lightTypeOff = new LightTypeOff(_strip);
   _lightTypeSingle = new LightTypeSingle(_strip);
   _lightTypeRandomGradation = new LightTypeRandomGradation(_strip, 100 /* speedspeedMs */);
