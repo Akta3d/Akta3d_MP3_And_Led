@@ -92,19 +92,6 @@ void setup() {
 
   lightManager.setup();
 
-  //Use softwareSerial to communicate with mp3.
-  mp3Serial.begin(9600);
-  if (!mp3Player.begin(mp3Serial)) {
-    Serial.println(F("Unable to begin mp3 player :"));
-    Serial.println(F("1.Please recheck the connection!"));
-    Serial.println(F("2.Please insert the SD card!"));
-    while(true);
-  }
-  
-  mp3Player.setTimeOut(500); //Set serial communictaion time out 500ms
-  mp3Player.outputDevice(DFPLAYER_DEVICE_SD); 
-  mp3Player.volume(volume);
-  
 #ifdef USE_WIFI
   // Connect to Wi-Fi
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -134,6 +121,21 @@ void setup() {
   lightModeButton.attach(LIGHT_MODE_BUTTON_PIN, INPUT );
   alertButton.attach(ALERT_BUTTON_PIN, INPUT );
 #endif
+
+  //Use softwareSerial to communicate with mp3.
+  Serial.println("Start MP3");
+    delay(500);
+  mp3Serial.begin(9600);
+  if (!mp3Player.begin(mp3Serial)) {
+    Serial.println(F("Unable to begin mp3 player :"));
+    Serial.println(F("1.Please recheck the connection!"));
+    Serial.println(F("2.Please insert the SD card!"));
+    while(true);
+  }
+  
+  mp3Player.setTimeOut(500); //Set serial communictaion time out 500ms
+  mp3Player.outputDevice(DFPLAYER_DEVICE_SD); 
+  mp3Player.volume(volume);
 
   Serial.println("Setup OK");
 }
