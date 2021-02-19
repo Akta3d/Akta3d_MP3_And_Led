@@ -1,4 +1,4 @@
-var cacheName = 'yuna-lights-pwa-1.1';
+var cacheName = 'yuna-lights-pwa-1.2';
 var filesToCache = [
   '/',
   '/index.html',

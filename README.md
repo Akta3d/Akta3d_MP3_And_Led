@@ -121,13 +121,17 @@ It's easy to add different light mode:
  - add your lights mode in the switch of LightManager::changeMode
 
 ## Web App
-A sample web app is available. It allow to control "all" main feature directly from a browser.  
-Just need set the gateway ip in code or in connection gui. During save, the ip is stored in LocalStorage.
+A sample web app is available. It allow to control "all" main feature directly from a browser. 
+
+### Add file to arduino file system
+From Arduino IDE : Tools => ESP8266 Sketch data upload
+
+### Open WebApp
+Start aduino sketch and open a web page on http://SERVER_IP:SERVER_PORT  
+
+### debug
+To developp on local you can open the index.html file in your browser. In this case you should set the Arduino server IP as gateway IP to connect to the WebSocket server.  
+On debug gatewayIp is stored on localStorage for next uses.  
 
 ### Progressive Web App
-Allow to install the webApp on smartphone.  
-We need start a webserver, for the first time ton serve index.html then install the web app.  
-- cd WebApp
-- npm i
-- npm start
-- go to 127.0.0.1:8080 or your_Ip:8080 then install the WebApp
+From browser menu you can install the webApp on your device. Only when index.html file is served from webverser (not from local file system) 

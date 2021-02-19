@@ -120,16 +120,23 @@ function onMessage(event) {
 // --------------- SETUP ------------------------
 window.addEventListener('load', onLoad);
 function onLoad(event) {
+    /*
     // register the service worker to have a progressive WebApp
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
+        navigator.serviceWorker.register('/sw.js');
+    } else {
+        console.warn('Browser not allow serviceWorker. Impossible to install app in cache.')
     }
-
-    var localIp = localStorage.getItem('gatewayIp');
-    if(localIp) {
-        gatewayIp = localIp;
+    */
+    var hostname = location.hostname;
+    if(!hostname) {
+        var localIp = localStorage.getItem('gatewayIp');
+        if(localIp) {
+            gatewayIp = localIp;
+        }
+    } else {
+        gatewayIp = hostname;
     }
-
     // display connection or gui
     switchGui();
 }

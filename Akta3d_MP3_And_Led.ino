@@ -16,6 +16,7 @@ TODO :
 #ifdef USE_WIFI
   #include <ESP8266WiFi.h>
   #include <ESPAsyncWebServer.h>
+  #include <FS.h>
 
   #define SERVER_PORT 80
   #define WEBSOCKET_PATH    "/ws"  
@@ -103,12 +104,48 @@ void setup() {
   // Print ESP Local IP Address
   Serial.println(WiFi.localIP());
 
+  // Initialize SPIFFS
+  if(!SPIFFS.begin()) {
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+
   // Init WebSocket
   Serial.println("Init WebSocket");
   initWebSocket();
 
   // Start server
-  Serial.println("Start server");
+  Serial.println("Start server on port : " + String(SERVER_PORT));
+  
+  // Route for root / web page
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(SPIFFS, "/index.html");
+  });  
+
+  // CAUTION : with this method all files on Arduino filesystem can be send
+  // do not store confidential data in filesystem or use specific route to serve only desired files
+  server.onNotFound([](AsyncWebServerRequest *request) {
+    String path = request->url();
+
+    if(!SPIFFS.exists(path)) {
+      request->send(404);
+    }
+    
+    String dataType = "text/plain";
+    if(path.endsWith("/")) path += "index.htm";
+
+    if(path.endsWith(".src")) path = path.substring(0, path.lastIndexOf("."));
+    else if(path.endsWith(".html")) dataType = "text/html";
+    else if(path.endsWith(".css")) dataType = "text/css";
+    else if(path.endsWith(".xml")) dataType = "text/xml";
+    else if(path.endsWith(".json")) dataType = "application/json";
+    else if(path.endsWith(".js")) dataType = "application/javascript";
+    else if(path.endsWith(".png")) dataType = "image/png";
+    else if(path.endsWith(".ico")) dataType = "image/x-icon";
+
+    request->send(SPIFFS, request->url(), dataType);
+  });
+
   server.begin();
 #endif
 
