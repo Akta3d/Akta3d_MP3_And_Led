@@ -1,6 +1,6 @@
 /*
 TODO :
-- LightMode in WebApp (shutdown should send OFF)
+- LightsMode in WebApp (shutdown should send OFF)
 
 - Start and stop WIFI from button
 - README : Add hardware connection (with buttons and without buttons)
@@ -9,7 +9,7 @@ TODO :
 #define USE_WIFI          // if define, allow to control mp3 and lights from wifi. See nodeJs repo to have the webServer
 #define USE_ELECTRONICS   // if define, allow to control mp3 and lights from hardware buttons and potentiometer
 
-#include "light-manager.h"
+#include "lights-manager.h"
 #include "SoftwareSerial.h"
 #include "DFRobotDFPlayerMini.h"
 
@@ -33,7 +33,7 @@ TODO :
 // ----- LEDS ----------
 #define LED_PIN D8
 #define NB_LED 30
-LightManager lightManager(LED_PIN, NB_LED, NEO_BGR + NEO_KHZ800);
+LightsManager lightsManager(LED_PIN, NB_LED, NEO_BGR + NEO_KHZ800);
 
 // ----- MP3 ----------
 #define NB_MAX_MP3_ADVERT 3
@@ -65,8 +65,8 @@ uint16_t shutDownTimerMillis = 0;
   #define NEXT_BUTTON_PIN D2
   ButtonEvents nextButton;
 
-  #define LIGHT_MODE_BUTTON_PIN D3
-  ButtonEvents lightModeButton;
+  #define LIGHTS_MODE_BUTTON_PIN D3
+  ButtonEvents lightsModeButton;
 
   #define ALERT_BUTTON_PIN D4
   ButtonEvents alertButton;
@@ -91,7 +91,7 @@ void setup() {
   Serial.println("");
   Serial.println("Setup Start");
 
-  lightManager.setup();
+  lightsManager.setup();
   
 #ifdef USE_WIFI
   // Connect to Wi-Fi
@@ -155,7 +155,7 @@ void setup() {
   prevButton.attach(PREV_BUTTON_PIN, INPUT );
   playButton.attach(PLAY_BUTTON_PIN, INPUT );
   nextButton.attach(NEXT_BUTTON_PIN, INPUT );
-  lightModeButton.attach(LIGHT_MODE_BUTTON_PIN, INPUT );
+  lightsModeButton.attach(LIGHTS_MODE_BUTTON_PIN, INPUT );
   alertButton.attach(ALERT_BUTTON_PIN, INPUT );
 #endif
 
@@ -187,7 +187,7 @@ void loop() {
   prevButton.update();  
   playButton.update();
   nextButton.update();
-  lightModeButton.update();
+  lightsModeButton.update();
   alertButton.update();
   volumePot.update();
   
@@ -227,15 +227,15 @@ void loop() {
     playNextDirectory();     
   }
   
-  // LIGHT BUTTON
+  // LIGHTS BUTTON
   // Tapped: change lights mode 
-  if (lightModeButton.tapped()) {
+  if (lightsModeButton.tapped()) {
     nextLightsMode();
   }
   
-  // LIGHT BUTTON
+  // LIGHTS BUTTON
   // Held: chosse a radom color
-  if ( lightModeButton.held() ) {
+  if ( lightsModeButton.held() ) {
     setLightsModeRandomColor1();
   }
 
@@ -246,7 +246,7 @@ void loop() {
   }
   
   // ALERT BUTTON
-  // Held: Set timer to pause mp3 and set Light Off
+  // Held: Set timer to pause mp3 and set Lights Off
   if (alertButton.held()) {
     switchShutDown();
   }
@@ -257,8 +257,8 @@ void loop() {
   }
 #endif
 
-  // LightManager need loop to change colors according lights mode
-  lightManager.loop();
+  // lightsManager need loop to change colors according lights mode
+  lightsManager.loop();
 
   // Print MP3 details
   if (mp3Player.available()) {
@@ -415,7 +415,7 @@ void notifyAllWsClients(String data) {
       else if(action == "nextLightsMode") { // no value
         nextLightsMode();
       }
-      else if(action == "changeLightsMode") { // value should be an int and should be is managed by LightManager
+      else if(action == "changeLightsMode") { // value should be an int and should be is managed by lightsManager
         changeLightsMode(value.toInt());
       }
       else if(action == "playPreviousTrack") { // no value
@@ -470,14 +470,14 @@ void notifyAllWsClients(String data) {
           Serial.printf("WebSocket client #%u connected from %s\n", clientId, client->remoteIP().toString().c_str());
           
           // send all data to the new connected client
-          color1 = lightManager.getColor1();
-          color2 = lightManager.getColor2();
+          color1 = lightsManager.getColor1();
+          color2 = lightsManager.getColor2();
           notifyWsClient(clientId, "mp3Playing:" + String(mp3Playing));
           notifyWsClient(clientId, "currentMp3Folder:" + String(currentMp3Folder));
           notifyWsClient(clientId, "loopTrack:" + String(loopTrack));
           notifyWsClient(clientId, "lightsModeColor1:" + String(color1.r) + "," + String(color1.g) + "," + String(color1.b));
           notifyWsClient(clientId, "lightsModeColor2:" + String(color2.r) + "," + String(color2.g) + "," + String(color2.b));
-          notifyWsClient(clientId, "lightsModeParam:" + String(lightManager.getParam()));
+          notifyWsClient(clientId, "lightsModeParam:" + String(lightsManager.getParam()));
           notifyWsClient(clientId, "volume:" + String(volume));
           notifyWsClient(clientId, "shutDownActive:" + String(shutDownActive));
           notifyWsClient(clientId, "shutDownInMinutes:" + String(shutDownInMinutes));
@@ -547,7 +547,7 @@ void switchLoopMode() {
   }
   Serial.print("Loop mode : ");
   Serial.println(loopTrack ? "Loop track" : "Loop Directory");
-  lightManager.displayAlert({0, 0, 255});
+  lightsManager.displayAlert({0, 0, 255});
 
   notifyAllWsClients("loopTrack:" + String(loopTrack));
 }
@@ -572,20 +572,20 @@ void playNextDirectory() {
 }   
 
 void nextLightsMode() {
-  Serial.println("Next lightMode");
-  lightManager.nextMode();
+  Serial.println("Next lightsMode");
+  lightsManager.nextMode();
 }
 
 void changeLightsMode(int mode) {
-  Serial.print("Change lightMode : ");
+  Serial.print("Change lightsMode : ");
   Serial.println(mode);
-  lightManager.changeMode(mode);
+  lightsManager.changeMode(mode);
 }
 
 void setLightsModeRandomColor1() {
   Serial.println("Random color 1");   
   RGB color =  {random(255), random(255), random(255)};
-  lightManager.setColor1(color);
+  lightsManager.setColor1(color);
 
   notifyAllWsClients("lightsModeColor1:" + String(color.r) + "," + String(color.g) + "," + String(color.b));
 }
@@ -599,7 +599,7 @@ void setLightsModeColor1(RGB color) {
   Serial.print(color.b);
   Serial.println("}");
   
-  lightManager.setColor1(color);
+  lightsManager.setColor1(color);
 
   notifyAllWsClients("lightsModeColor1:" + String(color.r) + "," + String(color.g) + "," + String(color.b));
 }
@@ -613,7 +613,7 @@ void setLightsModeColor2(RGB color) {
   Serial.print(color.b);
   Serial.println("}");
   
-  lightManager.setColor2(color);
+  lightsManager.setColor2(color);
 
   notifyAllWsClients("lightsModeColor2:" + String(color.r) + "," + String(color.g) + "," + String(color.b));
 }
@@ -622,7 +622,7 @@ void setLightsModeParam(int value) {
   Serial.print("Set lights mode parameter : ");
   Serial.println(value);
   
-  lightManager.setParam(value);
+  lightsManager.setParam(value);
 
   notifyAllWsClients("lightsModeParam:" + String(value));
 }
@@ -654,10 +654,10 @@ void switchShutDown() {
 
   if(shutDownActive) {
     shutDownTimerMillis = millis();
-    lightManager.displayAlert({255, 0, 0});
+    lightsManager.displayAlert({255, 0, 0});
   }
   else {      
-    lightManager.displayAlert({0, 255, 0});
+    lightsManager.displayAlert({0, 255, 0});
   }
 
   notifyAllWsClients("shutDownActive:" + String(shutDownActive));
@@ -673,7 +673,7 @@ void shutDown() {
   mp3Playing = false;
   mp3Player.pause();
 
-  lightManager.changeMode(OFF);
+  lightsManager.changeMode(OFF);
 
   notifyAllWsClients("mp3Playing:" + String(mp3Playing));
 }

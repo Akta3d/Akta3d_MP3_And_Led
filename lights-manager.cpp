@@ -1,7 +1,6 @@
-#include "light-manager.h"
-#include "light-type-single.h"
+#include "lights-manager.h"
 
-LightManager::LightManager(uint16_t pin, uint16_t nbLed, neoPixelType pixelType) {
+LightsManager::LightsManager(uint16_t pin, uint16_t nbLed, neoPixelType pixelType) {
   _pin = pin;
   _nbLed = nbLed;
   _currentMode = OFF;
@@ -18,12 +17,12 @@ LightManager::LightManager(uint16_t pin, uint16_t nbLed, neoPixelType pixelType)
   changeMode(SINGLE);
 }
 
-void LightManager::setup() {
+void LightsManager::setup() {
   _strip->begin();
   _strip->show(); // set all led to off
 }
 
-void LightManager::changeMode(uint16_t mode) {
+void LightsManager::changeMode(uint16_t mode) {
   switch(mode) {
     case SINGLE:
       _currentLightType = _lightTypeSingle;
@@ -50,7 +49,7 @@ void LightManager::changeMode(uint16_t mode) {
   _currentLightType->init();
 }
 
-void LightManager::nextMode() {
+void LightsManager::nextMode() {
   if(_currentMode != OFF) {
     _previousMode = _currentMode;
     changeMode(OFF);
@@ -63,7 +62,7 @@ void LightManager::nextMode() {
   }
 }
 
-void LightManager::chooseRandomMode() {
+void LightsManager::chooseRandomMode() {
   if(_currentMode != OFF) {
     changeMode(OFF);
   } else {
@@ -71,7 +70,7 @@ void LightManager::chooseRandomMode() {
   }
 }
 
-void LightManager::loop() {
+void LightsManager::loop() {
   if(_alertMillis == 0) {
     _currentLightType->loop();
   } 
@@ -87,31 +86,31 @@ void LightManager::loop() {
   }    
 }
 
-void LightManager::setColor1(RGB color) {
+void LightsManager::setColor1(RGB color) {
   _currentLightType->setColor1(color);
 }
 
-void LightManager::setColor2(RGB color) {
+void LightsManager::setColor2(RGB color) {
   _currentLightType->setColor2(color);  
 }
 
-void LightManager::setParam(int param) {
+void LightsManager::setParam(int param) {
   _currentLightType->setParam(param);  
 }
 
-RGB LightManager::getColor1() {
+RGB LightsManager::getColor1() {
   return _currentLightType->getColor1();
 }
 
-RGB LightManager::getColor2() {
+RGB LightsManager::getColor2() {
   return _currentLightType->getColor2();  
 }
 
-int LightManager::getParam() {
+int LightsManager::getParam() {
   return _currentLightType->getParam();  
 }
 
-void LightManager::displayAlert(RGB color) {
+void LightsManager::displayAlert(RGB color) {
   uint32_t stripColor = _strip->Color(color.r, color.g, color.b);
   _strip->fill(stripColor, 0, _strip->numPixels());
   _strip->show();
@@ -119,7 +118,7 @@ void LightManager::displayAlert(RGB color) {
   _alertMillis = millis();
 }
 
-void LightManager::blinkRedFirstLED() {
+void LightsManager::blinkRedFirstLED() {
   _strip->setPixelColor(0, 255/*R*/, 0/*G*/, 0/*B*/);
   _strip->show();;
   delay(500);

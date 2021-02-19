@@ -1,5 +1,5 @@
-#ifndef Light_manager_h
-#define Light_manager_h
+#ifndef Lights_manager_h
+#define Lights_manager_h
 
 #include <Adafruit_NeoPixel.h>    // https://github.com/adafruit/Adafruit_NeoPixel
 #include "light-type.h"
@@ -22,10 +22,10 @@ enum lightMode {
   RANDOM = 4,
 };
 
-class LightManager
+class LightsManager
 {
   public:
-    LightManager(uint16_t pin, uint16_t nbLed, neoPixelType pixelType = NEO_GRB + NEO_KHZ800);
+    LightsManager(uint16_t pin, uint16_t nbLed, neoPixelType pixelType = NEO_GRB + NEO_KHZ800);
 
     // need be called during arduino setup
     void setup(); 
