@@ -232,7 +232,7 @@ function initMainGuiEventListeners() {
 
 function refreshMainGui() {
     // mp3
-    document.getElementById('playPauseButton').innerHTML = mp3Playing ? 'Pause' : 'Play';
+    document.getElementById('playPauseButton').innerHTML = mp3Playing ? '||' : '>';
     document.getElementById('loopButton').innerHTML = loopTrack ? 'Loop track' : 'Loop Dir';
     document.getElementById('volumeLabel').innerHTML = `Volume : ${volume}`;
     document.getElementById('volumeSlider').value = volume;
