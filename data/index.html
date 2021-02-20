@@ -66,17 +66,23 @@
       <div class="card lightsMode">
         <div class="head">
           <h2>Ligths Mode</h2>
+          <button id="lightsModeOffButton" class="button headButton">Off</button>
         </div>
         <div class="content">
-          <div>          
-            <label for="color1Picker" id="color1Label" class="label">Color 1</label>
+          <div id="lightsModeSelectCtn" class="inputContainer">  
+            <label for="lightsModeSelect">Lights Mode :</label>
+            <select id="lightsModeSelect"></select>
+          </div>
+          <div id="lightsModeColor1Ctn" class="inputContainer">          
+            <label for="color1Picker">Color 1 :</label>
             <input type="color" id="color1Picker">
           </div>  
-          <div>          
-            <label for="color2Picker" id="color2Label" class="label">Color 2</label>
+          <div id="lightsModeColor2Ctn" class="inputContainer">          
+            <label for="color2Picker">Color 2 :</label>
             <input type="color" id="color2Picker">
           </div>       
-          <div>
+          <div id="lightsModeParamCtn" class="inputContainer">
+            <label for="lightsModeParamInput">Param :</label>
             <input id="lightsModeParamInput" class="input">
           </div>    
         </div>
@@ -85,20 +91,18 @@
       <div class="card shutDown">
         <div class="head">
           <h2>Shut Down</h2>
+          <button id="shutDownButton" class="button headButton">Shut down</button>
         </div>
         <div class="content">
           <div class="flexHoriz">
-            <div>
+            <div class="inputContainer">
               <label for="shutDownMinuteInput" class="label">Shut down after X minutes</label>
               <input type="number" id="shutDownMinuteInput" class="input">
             </div> 
-            <div>
+            <div class="inputContainer">
               <button id="shutDownTimerButton" class="button">%SHUT_DOWN%</button>
             </div>
           </div>
-          <div>
-            <button id="shutDownButton" class="button">Shut down</button>
-          </div>  
         </div>
       </div>
     </div>

@@ -21,12 +21,13 @@ h2{
 .card {
   max-width: 600px;
   margin: 24px auto;
-  padding: 8px 16px 16px 16px;
+  padding: 8px 16px;
   background-color: #F8F7F9;;
   box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
   border-radius: 8px;
 }
 .head {
+  position: relative;
   border-bottom: solid 1px darkgray;
 }
 .head > h2 {
@@ -36,6 +37,9 @@ h2{
 .content {
   margin: 8px;
   text-align: left;
+}
+.inputContainer{
+  margin: 8px;
 }
 .center{
   text-align: center;
@@ -59,7 +63,13 @@ h2{
 .label {
   display: block;
 }
-
+.headButton{
+  margin: 0;
+  right: 0;
+  top: 0;
+  position: absolute;
+  padding: 4px 8px;
+}
 .shutDown > .content > .flexHoriz {
   display: flex;
   justify-content: center;

@@ -13,10 +13,19 @@ var currentMp3Folder = 1; // not display for moment.
 var lightsModeColor1 = '#FF0000';
 var lightsModeColor2 = '#0000FF';
 var lightsModeParam = 0;
+var lightsModeMode = 0;
 
 var shutDownActive = false;
 var shutDownInMinutes = 15;
 var shutDownTimerMillis = 0; // not display for moment. TODO display time before shut down if active
+
+var lightsModes = [
+    { name: "OFF", id: 0, color1: false, color2: false, param: false},
+    { name: "SINGLE", id: 1, color1: true, color2: false, param: false},
+    { name: "FADE", id: 2, color1: true, color2: false, param: true},
+    { name: "RANDOM_GRADATION", id: 3, color1: false, color2: false, param: true},
+    { name: "RANDOM", id: 4, color1: false, color2: false, param: true},
+];
 
 // ------------ WEBSOCKET -------------------------
 function initWebSocket() {
@@ -97,7 +106,10 @@ function onMessage(event) {
             break;                            
         case 'lightsModeParam': 
             lightsModeParam = parseInt(value, 10);
-            break;            
+            break;    
+        case 'changeLightsMode':
+            lightsModeMode = parseInt(value, 10);
+            break;        
         case 'volume':
             volume = parseInt(value, 10);
             break;
@@ -147,6 +159,7 @@ function switchGui() {
         document.getElementById('connectionGui').style.display = 'none';
         document.getElementById('mainGui').style.display = 'block';
 
+        initMainGui();
         initMainGuiEventListeners();
         refreshMainGui();
     } else {
@@ -182,6 +195,16 @@ function onChangeGatewayIpButton() {
 }
 
 // --------------- MAIN GUI ---------------------
+function initMainGui() {
+    var select = document.getElementById('lightsModeSelect');
+    select.options.length = 0;
+
+    for (i = 0; i < lightsModes.length; i += 1) {
+        var newOption = new Option( lightsModes[i].name, lightsModes[i].id);
+        select.add( newOption);
+    }
+}
+
 function initMainGuiEventListeners() {
     // mp3
     document.getElementById('prevTrackButton').addEventListener('click', onPrevTrackButton);
@@ -193,12 +216,14 @@ function initMainGuiEventListeners() {
     document.getElementById('volumeSlider').addEventListener('change', onVolumeSlider);
 
     // lights mode
+    document.getElementById('lightsModeSelect').addEventListener('change', onLightsModeSelect);
     document.getElementById('color1Picker').addEventListener('input', onColor1Picker);
     document.getElementById('color1Picker').addEventListener('change', onColor1Picker);
     document.getElementById('color2Picker').addEventListener('input', onColor2Picker);
     document.getElementById('color2Picker').addEventListener('change', onColor2Picker);
     document.getElementById('lightsModeParamInput').addEventListener('change', onLightsModeParamInput);    
-
+    document.getElementById('lightsModeOffButton').addEventListener('click', onLightsModeOffButton);    
+    
     // shut down
     document.getElementById('shutDownMinuteInput').addEventListener('change', onShutDownMinuteInput);
     document.getElementById('shutDownTimerButton').addEventListener('click', shutDownTimerButton);
@@ -221,6 +246,25 @@ function refreshMainGui() {
     document.getElementById('shutDownMinuteInput').value = shutDownInMinutes;
     document.getElementById('shutDownTimerButton').innerHTML = shutDownActive ? 'Cancel' : 'Start';
     document.getElementById('shutDownTimerButton').style.background = shutDownActive ? 'red' : 'green';
+
+    // lightsModeMode
+    var selectedOptionIndex = -1;
+    for(var i = 0 ; i < lightsModes.length; i+=1) {
+        if(lightsModes[i].id === lightsModeMode) {
+            selectedOptionIndex = i;
+        }
+    }
+
+    if(selectedOptionIndex !== -1) {
+        var selectedOption = lightsModes[selectedOptionIndex];
+        document.getElementById('lightsModeSelect').selectedIndex = selectedOptionIndex;
+
+        document.getElementById('lightsModeColor1Ctn').style.display = selectedOption.color1 ? 'block' : 'none';
+        document.getElementById('lightsModeColor2Ctn').style.display = selectedOption.color2 ? 'block' : 'none';
+        document.getElementById('lightsModeParamCtn').style.display = selectedOption.param ? 'block' : 'none'; 
+
+        document.getElementById('lightsModeOffButton').style.display = selectedOption.id !== 0 ? 'block' : 'none';         
+    }
 }
 
 // -------------- ACTIONS --------------------------
@@ -255,6 +299,15 @@ function onVolumeSlider() {
 }
 
 // -- LIGHTS MODE
+function onLightsModeSelect() {
+    var select = document.getElementById('lightsModeSelect');
+    if(select.selectedIndex >= 0 && select.selectedIndex < lightsModes.length) {
+        var option = lightsModes[select.selectedIndex];
+        console.log(`onLightsModeSelect : ${option.name}`);
+        websocket.send(`changeLightsMode:${option.id}`);
+    }
+}
+
 function onColor1Picker() {
     console.log(`onColor1Picker : ${document.getElementById('color1Picker').value}`);
     var rgb = hexToRgb(document.getElementById('color1Picker').value);
@@ -268,6 +321,10 @@ function onColor2Picker() {
 function onLightsModeParamInput() {
     console.log(`onLightsModeParamInput : ${document.getElementById('lightsModeParamInput').value}`);
     websocket.send(`setLightsModeParam:${document.getElementById('lightsModeParamInput').value}`);
+}
+function onLightsModeOffButton() {
+    console.log('onLightsModeOffButton');
+    websocket.send('changeLightsMode:0');
 }
 
 // -- SHUT DOWN

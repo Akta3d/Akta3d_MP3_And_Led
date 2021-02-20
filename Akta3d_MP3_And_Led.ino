@@ -1,7 +1,5 @@
 /*
 TODO :
-- LightsMode in WebApp (shutdown should send OFF)
-
 - Start and stop WIFI from button
 - README : Add hardware connection (with buttons and without buttons)
 - README : Add TFT Touchscreen connection with Arduino MEGA
@@ -475,6 +473,7 @@ void notifyAllWsClients(String data) {
           notifyWsClient(clientId, "mp3Playing:" + String(mp3Playing));
           notifyWsClient(clientId, "currentMp3Folder:" + String(currentMp3Folder));
           notifyWsClient(clientId, "loopTrack:" + String(loopTrack));
+          notifyWsClient(clientId, "changeLightsMode:" + String(lightsManager.getCurrentMode()));
           notifyWsClient(clientId, "lightsModeColor1:" + String(color1.r) + "," + String(color1.g) + "," + String(color1.b));
           notifyWsClient(clientId, "lightsModeColor2:" + String(color2.r) + "," + String(color2.g) + "," + String(color2.b));
           notifyWsClient(clientId, "lightsModeParam:" + String(lightsManager.getParam()));
@@ -574,12 +573,16 @@ void playNextDirectory() {
 void nextLightsMode() {
   Serial.println("Next lightsMode");
   lightsManager.nextMode();
+
+  notifyAllWsClientsLightsModeParameters();
 }
 
 void changeLightsMode(int mode) {
   Serial.print("Change lightsMode : ");
   Serial.println(mode);
   lightsManager.changeMode(mode);
+
+  notifyAllWsClientsLightsModeParameters();
 }
 
 void setLightsModeRandomColor1() {
@@ -676,6 +679,16 @@ void shutDown() {
   lightsManager.changeMode(OFF);
 
   notifyAllWsClients("mp3Playing:" + String(mp3Playing));
+  notifyAllWsClientsLightsModeParameters();
+}
+
+void notifyAllWsClientsLightsModeParameters() {
+  RGB color1 = lightsManager.getColor1();
+  RGB color2 = lightsManager.getColor2();
+  notifyAllWsClients("changeLightsMode:" + String(lightsManager.getCurrentMode()));
+  notifyAllWsClients("lightsModeColor1:" + String(color1.r) + "," + String(color1.g) + "," + String(color1.b));
+  notifyAllWsClients("lightsModeColor2:" + String(color2.r) + "," + String(color2.g) + "," + String(color2.b));
+  notifyAllWsClients("lightsModeParam:" + String(lightsManager.getParam()));
 }
 
 /*
