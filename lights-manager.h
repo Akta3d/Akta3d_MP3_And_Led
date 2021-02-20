@@ -39,6 +39,8 @@ class LightsManager
     // swith to OFF between each type
     void chooseRandomMode();
 
+    int getCurrentMode() {return _currentMode;} ;
+
     // actions on lightType
     void loop();
     void setColor1(RGB color);
