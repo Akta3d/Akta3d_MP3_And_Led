@@ -206,7 +206,8 @@ function initMainGui() {
 }
 
 function initMainGuiEventListeners() {
-    // mp3
+    // mp3    
+    document.getElementById('playAlertButton').addEventListener('click', onPlayAlertButton);
     document.getElementById('prevTrackButton').addEventListener('click', onPrevTrackButton);
     document.getElementById('playPauseButton').addEventListener('click', onPlayPauseButton);
     document.getElementById('nextTrackButton').addEventListener('click', onNextTrackButton);
@@ -269,6 +270,10 @@ function refreshMainGui() {
 
 // -------------- ACTIONS --------------------------
 // -- MP3
+function onPlayAlertButton() {
+    console.log('onPlayAlertButton');
+    websocket.send('playRandomAlert');
+}
 function onPrevTrackButton() {
     console.log('onPrevTrackButton');
     websocket.send('playPreviousTrack');
