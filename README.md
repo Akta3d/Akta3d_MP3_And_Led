@@ -123,6 +123,12 @@ It's easy to add different light mode:
 ## Web App
 A sample web app is available. It allow to control "all" main feature directly from a browser. 
 
+### Add Arduino IDE plugin to upload file on Arduino file system
+- Download last release of https://github.com/esp8266/arduino-esp8266fs-plugin/releases  
+- On your Arduino directory, create a new directory "Tools"
+- Unzip the archive here
+- Restart IDE
+
 ### Add file to arduino file system
 From Arduino IDE : Tools => ESP8266 Sketch data upload
 
