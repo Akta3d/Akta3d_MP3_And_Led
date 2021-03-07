@@ -6,6 +6,7 @@ TODO :
 */
 #define USE_WIFI          // if define, allow to control mp3 and lights from wifi. See nodeJs repo to have the webServer
 #define USE_ELECTRONICS   // if define, allow to control mp3 and lights from hardware buttons and potentiometer
+#define MP3
 
 #include "lights-manager.h"
 #include "SoftwareSerial.h"
@@ -34,19 +35,20 @@ TODO :
 LightsManager lightsManager(LED_PIN, NB_LED, NEO_BGR + NEO_KHZ800);
 
 // ----- MP3 ----------
-#define NB_MAX_MP3_ADVERT 3
-#define NB_MAX_MP3_FOLDER 2
-#define MP3_RX_PIN D7
-#define MP3_TX_PIN D6
-const bool MP3_START_AFTER_FAIL = true; // allow to force start after a fail from MP3 player
-SoftwareSerial mp3Serial(MP3_RX_PIN, MP3_TX_PIN);
-DFRobotDFPlayerMini mp3Player;
 bool mp3Started = false; // needed to know if mp3 player have already start play track since arduino start
 bool mp3Playing = false; // needed to switch between "play" / "pause"
 bool loopTrack = false;  // needed to switch between "loop current track" / "loop all track of the current directory"
 uint16_t currentMp3Folder = 1;
 uint16_t volume = 10;
-
+#define NB_MAX_MP3_ADVERT 3
+#define NB_MAX_MP3_FOLDER 2
+#ifdef MP3
+  #define MP3_RX_PIN D7
+  #define MP3_TX_PIN D6
+  const bool MP3_START_AFTER_FAIL = true; // allow to force start after a fail from MP3 player
+  SoftwareSerial mp3Serial(MP3_RX_PIN, MP3_TX_PIN);
+  DFRobotDFPlayerMini mp3Player;
+#endif
 // ----- shut down -------
 bool shutDownActive = false;
 uint16_t shutDownInMinutes = 15;
@@ -72,7 +74,7 @@ uint16_t shutDownTimerMillis = 0;
   // ----- POTENTIOMETER ----------
   #define VOLUME_POT_PIN A0
   #define MAX_VOLUME 30
-  Akta3d_Potentiometer volumePot(VOLUME_POT_PIN, 0, MAX_VOLUME);
+  Akta3d_Potentiometer volumePot(VOLUME_POT_PIN, 0, MAX_VOLUME, 0, 1024, 1 /* bCoeff */);
 #endif
 
   // ----- WIFI & WEBSOCKET ----------
@@ -157,9 +159,10 @@ void setup() {
   alertButton.attach(ALERT_BUTTON_PIN, INPUT );
 #endif
 
+#ifdef MP3
   //Use softwareSerial to communicate with mp3.
   Serial.println("Start MP3");
-    delay(500);
+  delay(500);
   mp3Serial.begin(9600);
   if (!mp3Player.begin(mp3Serial)) {
     Serial.println(F("Unable to begin mp3 player :"));
@@ -171,7 +174,7 @@ void setup() {
   mp3Player.setTimeOut(500); //Set serial communictaion time out 500ms
   mp3Player.outputDevice(DFPLAYER_DEVICE_SD); 
   mp3Player.volume(volume);
-
+#endif
   Serial.println("Setup OK");
 }
 
@@ -258,10 +261,12 @@ void loop() {
   // lightsManager need loop to change colors according lights mode
   lightsManager.loop();
 
+#ifdef MP3
   // Print MP3 details
   if (mp3Player.available()) {
     printDetail(mp3Player.readType(), mp3Player.read()); //Print the detail message from DFPlayer to handle different errors and states.
   }
+#endif
 
   // Auto shut down
   if(shutDownActive && (shutDownTimerMillis + (shutDownInMinutes * 1000 * 60) < millis())) {
@@ -270,6 +275,7 @@ void loop() {
   }
 }
 
+#ifdef MP3
 /**
  Print MP3 details event
  
@@ -342,6 +348,7 @@ void printDetail(uint8_t type, int value){
       break;
   }
 }
+#endif
 
 void notifyAllWsClients(String data) {
   #ifdef USE_WIFI
@@ -502,7 +509,9 @@ void notifyAllWsClients(String data) {
 
 void playPreviousTrack() {
   Serial.println("Play previous"); 
+#ifdef MP3
   mp3Player.previous(); 
+#endif
 } 
 
 void playPreviousDirectory() {
@@ -526,11 +535,15 @@ void switchPlayPause() {
       mp3Started = true;
       playOrLoopFirstTrack();
     } else {
+#ifdef MP3      
       mp3Player.start();       
+#endif      
     }
     Serial.println("Play");
   } else {
+#ifdef MP3    
     mp3Player.pause();
+#endif
     Serial.println("Pause");
   }
 
@@ -540,7 +553,9 @@ void switchPlayPause() {
 void switchLoopMode() {
   loopTrack = !loopTrack;
   if(loopTrack) {
+#ifdef MP3    
     mp3Player.enableLoop();     
+#endif    
   } else { 
     playOrLoopFirstTrack();      
   }
@@ -553,7 +568,9 @@ void switchLoopMode() {
 
 void playNextTrack() {
   Serial.println("Play next");
+#ifdef MP3  
   mp3Player.next();
+#endif  
 }
 
 void playNextDirectory() {
@@ -634,7 +651,9 @@ void playRandomAlert() {
   Serial.println("Play Alert");
 
   int randomAdvert = random(1, NB_MAX_MP3_ADVERT + 1); 
+#ifdef MP3  
   mp3Player.advertise(randomAdvert); 
+#endif  
 }  
 
 void setVolume(uint16_t newVolume) {
@@ -644,8 +663,9 @@ void setVolume(uint16_t newVolume) {
   volume = newVolume;
   Serial.print("volumePot = ");
   Serial.println(volume);
-
+#ifdef MP3
   mp3Player.volume(volume);
+#endif
 
   notifyAllWsClients("volume:" + String(volume));
 }
@@ -674,8 +694,9 @@ void setShutDownMinutes(int value) {
 
 void shutDown() {
   mp3Playing = false;
+#ifdef MP3  
   mp3Player.pause();
-
+#endif
   lightsManager.changeMode(OFF);
 
   notifyAllWsClients("mp3Playing:" + String(mp3Playing));
@@ -695,10 +716,12 @@ void notifyAllWsClientsLightsModeParameters() {
   According loop mode, play the first track of the current folder
 */
 void playOrLoopFirstTrack() {
+#ifdef MP3  
   if(loopTrack) {      
     mp3Player.playFolder(currentMp3Folder, 1);  
     mp3Player.enableLoop();        
   } else {
     mp3Player.loopFolder(currentMp3Folder);           
   }
+#endif
 }
