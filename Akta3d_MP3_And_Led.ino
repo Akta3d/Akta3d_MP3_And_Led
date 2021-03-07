@@ -439,7 +439,7 @@ void notifyAllWsClients(String data) {
         playNextTrack();
       }
       else if(action == "playNextDirectory") { // no value
-        playNextTrack();
+        playNextDirectory();
       }
       else if(action == "playRandomAlert") { // no value
         playRandomAlert();
