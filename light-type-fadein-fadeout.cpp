@@ -33,7 +33,8 @@ void LightTypeFadeInFadeOut::setLightsColor() {
 }
 
 void LightTypeFadeInFadeOut::loop() {
-  if(millis() - _lastMillis >= _speedMs) {
+  unsigned long now = millis();
+  if(now - _lastMillis >= _speedMs) {
     _currentStep = _currentStep + _incStep;
 
     if(_currentStep <= 0) {
@@ -44,6 +45,6 @@ void LightTypeFadeInFadeOut::loop() {
 
     setLightsColor();
 
-    _lastMillis = millis();
+    _lastMillis = now;
   }
 }

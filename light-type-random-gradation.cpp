@@ -13,7 +13,9 @@ void LightTypeRandomGradation::init() {
 }
 
 void LightTypeRandomGradation::loop() {
-  if(millis() - _lastMillis >= _speedMs) {
+  unsigned long now = millis();
+
+  if(now - _lastMillis >= _speedMs) {
     // change one led
     renderLED(_currentLED);
 
@@ -29,7 +31,7 @@ void LightTypeRandomGradation::loop() {
       _color = {random(255), random(255), random(255)};
     }
 
-    _lastMillis = millis();
+    _lastMillis = now;
   }
 }
 

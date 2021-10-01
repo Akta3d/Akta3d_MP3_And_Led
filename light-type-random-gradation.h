@@ -25,7 +25,7 @@ class LightTypeRandomGradation : public LightType
     RGB _color;
     RGB _lastColor;    
     uint16_t _currentLED;
-    uint16_t _lastMillis;
+    unsigned long _lastMillis;
     
 };
 

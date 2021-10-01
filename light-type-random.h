@@ -17,7 +17,7 @@ class LightTypeRandom : public LightType
     
   private:
     uint16_t _speedMs;   
-    uint16_t _lastMillis;
+    unsigned long _lastMillis;
     
 };
 

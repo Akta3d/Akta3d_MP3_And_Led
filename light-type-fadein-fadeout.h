@@ -29,7 +29,7 @@ class LightTypeFadeInFadeOut : public LightType
     int16_t _incStep;
     uint16_t _currentStep;
     uint16_t _speedMs;   
-    uint16_t _lastMillis;
+    unsigned long _lastMillis;
 };
 
 #endif
