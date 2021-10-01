@@ -28,7 +28,7 @@ uint32_t LightTypeFadeInFadeOut::getFadeColor() {
 }
 
 void LightTypeFadeInFadeOut::setLightsColor() {
-  _strip->fill(getFadeColor(), 0, _strip->numPixels());
+  _strip->fill(getFadeColor(), 0);
   _strip->show();
 }
 

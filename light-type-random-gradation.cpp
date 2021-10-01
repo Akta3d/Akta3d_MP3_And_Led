@@ -22,7 +22,7 @@ void LightTypeRandomGradation::loop() {
     // increase led number for next loop
     _currentLED += 1;
     
-    if(_currentLED > _strip->numPixels()) {
+    if(_currentLED >= _strip->numPixels()) {
       // reset to 0
       _currentLED = 0;
       

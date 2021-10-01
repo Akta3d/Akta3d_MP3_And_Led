@@ -7,7 +7,7 @@ LightTypeSingle::LightTypeSingle(Adafruit_NeoPixel* strip)
 
 void LightTypeSingle::init() {
   uint32_t stripColor = _strip->Color(_currentColor.r, _currentColor.g, _currentColor.b);
-  _strip->fill(stripColor, 0, _strip->numPixels());
+  _strip->fill(stripColor, 0);
   _strip->show();
 }
 
