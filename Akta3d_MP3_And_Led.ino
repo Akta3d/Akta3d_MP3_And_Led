@@ -441,9 +441,11 @@ void notifyAllWsClients(String data) {
   void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     AwsFrameInfo *info = (AwsFrameInfo*)arg;
     if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
-      data[len] = 0;
+      String dataStr = "";
+      for(int i = 0 ; i < len ; i+=1) {
+        dataStr += (char)data[i];
+      }
       
-      String dataStr((char*)data);
       String action;
       String value;
 
