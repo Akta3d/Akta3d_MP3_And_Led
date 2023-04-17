@@ -25,13 +25,13 @@ enum lightMode {
 class LightsManager
 {
   public:
-    LightsManager(uint16_t pin, uint16_t nbLed, neoPixelType pixelType = NEO_GRB + NEO_KHZ800);
+    LightsManager(uint8_t pin, uint16_t nbLed, neoPixelType pixelType = NEO_GRB + NEO_KHZ800);
 
     // need be called during arduino setup
     void setup(); 
 
     // choose a specific lightType
-    void changeMode(uint16_t mode);
+    void changeMode(uint8_t mode);
 
     void nextMode();
     
@@ -39,16 +39,16 @@ class LightsManager
     // swith to OFF between each type
     void chooseRandomMode();
 
-    int getCurrentMode() {return _currentMode;} ;
+    uint8_t getCurrentMode() {return _currentMode;} ;
 
     // actions on lightType
     void loop();
     void setColor1(RGB color);
     void setColor2(RGB color);
-    void setParam(int param);
+    void setParam(uint16_t param);
     RGB getColor1();
     RGB getColor2();
-    int getParam();
+    uint16_t getParam();
 
     // Disaply all LEDS on color during ALERT_DURATION millisecond
     void displayAlert(RGB color);
@@ -58,10 +58,10 @@ class LightsManager
 
     
   private:
-    uint16_t _pin;
+    uint8_t _pin;
     uint16_t _nbLed;
-    uint16_t _currentMode; 
-    uint16_t _previousMode;  
+    uint8_t _currentMode; 
+    uint8_t _previousMode;  
   
     Adafruit_NeoPixel* _strip;
     LightType* _currentLightType;

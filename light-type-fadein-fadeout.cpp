@@ -21,9 +21,9 @@ void LightTypeFadeInFadeOut::setColor1(RGB color) {
 }
 
 uint32_t LightTypeFadeInFadeOut::getFadeColor() {
-  int r = map(_currentStep, 0, _nbStep, 1, (uint16_t)_currentColor.r);
-  int g = map(_currentStep, 0, _nbStep, 1, (uint16_t)_currentColor.g);
-  int b = map(_currentStep, 0, _nbStep, 1, (uint16_t)_currentColor.b);
+  uint8_t r = map(_currentStep, 0, _nbStep, 1, (uint16_t)_currentColor.r);
+  uint8_t g = map(_currentStep, 0, _nbStep, 1, (uint16_t)_currentColor.g);
+  uint8_t b = map(_currentStep, 0, _nbStep, 1, (uint16_t)_currentColor.b);
   return _strip->Color(r, g, b);
 }
 

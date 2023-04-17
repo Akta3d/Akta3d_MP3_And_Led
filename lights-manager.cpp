@@ -1,6 +1,6 @@
 #include "lights-manager.h"
 
-LightsManager::LightsManager(uint16_t pin, uint16_t nbLed, neoPixelType pixelType) {
+LightsManager::LightsManager(uint8_t pin, uint16_t nbLed, neoPixelType pixelType) {
   _pin = pin;
   _nbLed = nbLed;
   _currentMode = OFF;
@@ -22,7 +22,7 @@ void LightsManager::setup() {
   _strip->show(); // set all led to off
 }
 
-void LightsManager::changeMode(uint16_t mode) {
+void LightsManager::changeMode(uint8_t mode) {
   switch(mode) {
     case SINGLE:
       _currentLightType = _lightTypeSingle;
@@ -94,7 +94,7 @@ void LightsManager::setColor2(RGB color) {
   _currentLightType->setColor2(color);  
 }
 
-void LightsManager::setParam(int param) {
+void LightsManager::setParam(uint16_t param) {
   _currentLightType->setParam(param);  
 }
 
@@ -106,7 +106,7 @@ RGB LightsManager::getColor2() {
   return _currentLightType->getColor2();  
 }
 
-int LightsManager::getParam() {
+uint16_t LightsManager::getParam() {
   return _currentLightType->getParam();  
 }
 
