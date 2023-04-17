@@ -37,7 +37,7 @@ function initWebSocket() {
     websocket = new WebSocket(gateway);
     websocket.onopen    = onOpen;
     websocket.onclose   = onClose;
-    websocket.onmessage = onMessage;
+    websocket.onmessage = onMessages;
 }
 
 function onOpen(event) {
@@ -52,15 +52,26 @@ function onClose(event) {
     switchGui();
 }
 
-function onMessage(event) {
-    var action = event.data;
+function onMessages(event) {
+    var messages = event.data;
+    var messages = messages.split('|');
+    console.log(`Received ${messages.length - 1} actions`);
+    messages.forEach(message => {
+        if(message) {
+            onMessage(message);
+        }
+    });
+}
+
+function onMessage(message) {
+    var action = message;
     var value = 0;
-    var pos = event.data.indexOf(':');
+    var pos = message.indexOf(':');
     if(pos !== -1) {
-        action = event.data.substr(0, pos);
-        value = event.data.substr(pos + 1);
+        action = message.substr(0, pos);
+        value = message.substr(pos + 1);
     }
-    console.log(`Received event. Action: ${action}, Value:${value}`);
+    console.log(`Received action: ${action}, Value:${value}`);
 
     switch(action) {
         case 'mp3Playing':

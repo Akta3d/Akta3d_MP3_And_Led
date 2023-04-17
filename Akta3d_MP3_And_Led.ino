@@ -106,6 +106,11 @@ uint8_t _shutDownTimerMillis = 0;
 #ifdef USE_WIFI
   AsyncWebServer _server(SERVER_PORT);
   AsyncWebSocket _ws(WEBSOCKET_PATH);
+  // message to send to websockets
+  // separator is "|"
+  String _wsMessages = ""; 
+  unsigned long _lastSendMessageMillis = 0;
+  unsigned long _sendWsMessageEachMs = 200;
 #endif
 
 void setup() {
@@ -139,6 +144,7 @@ void setup() {
 
     // Init WebSocket
     Serial.println("Init WebSocket");
+     _lastSendMessageMillis =  millis();
     initWebSocket();
 
     // Start server
@@ -219,6 +225,7 @@ void setup() {
 void loop() {  
   #ifdef USE_WIFI
     _ws.cleanupClients(); 
+    sendWsMessages();
   #endif
 
   #ifdef USE_ELECTRONICS  
@@ -402,14 +409,33 @@ void notifyAllWsClients(String data) {
   #ifdef USE_WIFI
     // send data to all connected clients
     //Serial.println("notifyAllWsClients : " + data);
-    _ws.textAll(data);
+    // _ws.textAll(data);
+
+    _wsMessages += data + "|";
   #endif
 }
 
 #ifdef USE_WIFI
+  void sendWsMessages() {
+    unsigned long now = millis();
+
+    if(now - _lastSendMessageMillis >= _sendWsMessageEachMs) {
+      if(_wsMessages != "") {
+        _ws.textAll(_wsMessages);
+        _wsMessages = "";
+      }
+      _lastSendMessageMillis = now;
+    }
+  }
+
   void notifyWsClient(uint32_t clientId, String data) {
     //Serial.println("notifyWsClient : " + data);
-    _ws.text(clientId, data);
+    // _ws.text(clientId, data);
+
+    // we can't send too many message in same time
+    // we need buffer them
+    // to simplify code, we decide to notify all clients and buffer message for all client
+    notifyAllWsClients(data);
   }
 
   void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
