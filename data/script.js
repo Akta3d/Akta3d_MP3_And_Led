@@ -129,6 +129,10 @@ function onMessage(event) {
     refreshMainGui();
 }
 
+function sendMessage(message) {
+	console.log('send message : ' + message);
+	websocket.send(message);
+}
 // --------------- SETUP ------------------------
 window.addEventListener('load', onLoad);
 function onLoad(event) {
@@ -272,35 +276,35 @@ function refreshMainGui() {
 // -- MP3
 function onPlayAlertButton() {
     console.log('onPlayAlertButton');
-    websocket.send('playRandomAlert');
+    sendMessage('playRandomAlert');
 }
 function onPrevTrackButton() {
     console.log('onPrevTrackButton');
-    websocket.send('playPreviousTrack');
+    sendMessage('playPreviousTrack');
 }
 function onPlayPauseButton() {
     console.log('onPlayPauseButton');
-    websocket.send('switchPlayPause');
+    sendMessage('switchPlayPause');
 }
 function onNextTrackButton() {
     console.log('onNextTrackButton');
-    websocket.send('playNextTrack');
+    sendMessage('playNextTrack');
 }
 function onPrevDirButton() {
     console.log('onPrevDirButton');
-    websocket.send('playPreviousDirectory');
+    sendMessage('playPreviousDirectory');
 }
 function onLoopButton() {
     console.log('onLoopButton');
-    websocket.send('switchLoopMode');
+    sendMessage('switchLoopMode');
 }
 function onNextDirButton() {
     console.log('onNextDirButton');
-    websocket.send('playNextDirectory');
+    sendMessage('playNextDirectory');
 }
 function onVolumeSlider() {
     console.log(`onVolumeSlider : ${document.getElementById('volumeSlider').value}`);
-    websocket.send(`setVolume:${document.getElementById('volumeSlider').value}`);
+    sendMessage(`setVolume:${document.getElementById('volumeSlider').value}`);
 }
 
 // -- LIGHTS MODE
@@ -309,43 +313,43 @@ function onLightsModeSelect() {
     if(select.selectedIndex >= 0 && select.selectedIndex < lightsModes.length) {
         var option = lightsModes[select.selectedIndex];
         console.log(`onLightsModeSelect : ${option.name}`);
-        websocket.send(`changeLightsMode:${option.id}`);
+        sendMessage(`changeLightsMode:${option.id}`);
     }
 }
 
 function onColor1Picker() {
     console.log(`onColor1Picker : ${document.getElementById('color1Picker').value}`);
     var rgb = hexToRgb(document.getElementById('color1Picker').value);
-    websocket.send(`setLightsModeColor1:${rgb.r},${rgb.g},${rgb.b}`);
+    sendMessage(`setLightsModeColor1:${rgb.r},${rgb.g},${rgb.b}`);
 }
 function onColor2Picker() {
     console.log(`onColor2Picker : ${document.getElementById('color2Picker').value}`);
     var rgb = hexToRgb(document.getElementById('color2Picker').value);
-    websocket.send(`setLightsModeColor2:${rgb.r},${rgb.g},${rgb.b}`);
+    sendMessage(`setLightsModeColor2:${rgb.r},${rgb.g},${rgb.b}`);
 }
 function onLightsModeParamInput() {
     console.log(`onLightsModeParamInput : ${document.getElementById('lightsModeParamInput').value}`);
-    websocket.send(`setLightsModeParam:${document.getElementById('lightsModeParamInput').value}`);
+    sendMessage(`setLightsModeParam:${document.getElementById('lightsModeParamInput').value}`);
 }
 function onLightsModeOffButton() {
     console.log('onLightsModeOffButton');
-    websocket.send('changeLightsMode:0');
+    sendMessage('changeLightsMode:0');
 }
 
 // -- SHUT DOWN
 function onShutDownMinuteInput() {
     console.log(`onShutDownMinuteInput : ${document.getElementById('shutDownMinuteInput').value}`);
-    websocket.send(`shutDownMinutes:${document.getElementById('shutDownMinuteInput').value}`);
+    sendMessage(`shutDownMinutes:${document.getElementById('shutDownMinuteInput').value}`);
 }
 
 function shutDownTimerButton() {
     console.log('shutDownTimerButton');
-    websocket.send('switchShutDown');
+    sendMessage('switchShutDown');
 }
 
 function onShutDownButton() {
     console.log('onShutDownButton');
-    websocket.send('shutDown');
+    sendMessage('shutDown');
 }
 
 
